@@ -14,8 +14,7 @@ import {
   TextInput,
   StyleSheet,
   Picker,
-  ToastAndroid,
-  NativeModules,
+  ToastAndroid
 } from 'react-native';
 
 // Npm packages
@@ -28,6 +27,10 @@ import getTheme from '../native-base-theme/components';
 import Camera from 'react-native-camera';
 
 import * as theme from './styles/theme';
+
+import RNFetchBlob from 'react-native-fetch-blob';
+const fs = RNFetchBlob.fs
+
 
 export default class TradeData extends Component {
 
@@ -134,7 +137,20 @@ export default class TradeData extends Component {
     const options = {};
     this.camera.capture({metadata: options})
       .then((data) => {
-        ToastAndroid.show("Se ha guardado exitosamente", ToastAndroid.SHORT);
+        let base64 = ''
+        fs.readStream(
+            data["path"],
+            'base64',
+            4095)
+        .then((ifstream) => {
+            ifstream.open()
+            ifstream.onData((chunk) => {base64 += chunk})
+            ifstream.onError((err) => {console.log('oops', err)})
+            ifstream.onEnd(() => {
+              // Aca obtengo el archivo en base64
+              console.log(base64)
+            })
+        })
       })
       .catch(err => console.error(err));
   }
