@@ -28,8 +28,16 @@ import moment from 'moment';
 // Get the default theme
 import getTheme from '../../native-base-theme/components';
 
+// Import utils
+import * as utils from '../utils/utils';
+
+// Import http service
+import * as http from '../utils/http';
+
+// Import the custom theme
 import * as theme from '../styles/theme';
 
+// Module to convert
 import RNFetchBlob from 'react-native-fetch-blob';
 const fs = RNFetchBlob.fs
 
@@ -38,24 +46,25 @@ export default class CreateTrade extends Component {
 
   constructor(props){
     super(props);
-    this.trade = {
+    this.state = {
+
       enter: null,
       stop: null,
       profit: null,
-      date: moment().format("YYYY-MM-DD"),
-      time: null,
-      trade_type: "other",
-      result: "w",
-      photo: null,
-    }
-    this.state = {
-      trade: this.trade,
       date: null,
-      result: null,
-      visible: false,
-      trade_type: "other",
       result: "w",
+      tradeType: "other",
       date: moment().format("YYYY-MM-DD"),
+      photo: null,
+      time: null,
+
+      visible: false,
+
+      hasEnter: false,
+      hasStop: false,
+      hasProfit: false,
+      hasDate: false,
+      hasTime: false,
     };
   }
 
@@ -73,28 +82,46 @@ export default class CreateTrade extends Component {
           <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
           <Form style={styles.form}>
             <Item floatingLabel>
-              <Label>Entrada</Label>
+              <Label>
+                Enter
+                <Text style={[styles.requiredInput,!this.state.hasEnter ? theme.inputError.inputError : null]}> *</Text>
+              </Label>
               <Input
-                onChangeText={(text) => {this.trade.enter=text}}
+                onChangeText={(text) => {
+                  this.setState({enter: text});
+                  text!="" ? this.setState({hasEnter: true}) : this.setState({hasEnter: false})
+                }}
               />
             </Item>
-            <View style={styles.stop_profit_container}>
-              <Item floatingLabel style={styles.stop_item}>
-                <Label>Stop</Label>
+            <View style={styles.stopProfitContainer}>
+              <Item floatingLabel style={styles.stopItem}>
+                <Label>
+                  Stop
+                  <Text style={[styles.requiredInput,!this.state.hasStop ? theme.inputError.inputError : null]}> *</Text>
+                </Label>
                 <Input
-                  onChangeText={(text) => {this.trade.stop=text}}
+                  onChangeText={(text) => {
+                    this.setState({stop: text})
+                    text!="" ? this.setState({hasStop: true}) : this.setState({hasStop: false})
+                  }}
                 />
               </Item>
-              <Item floatingLabel style={styles.profit_item}>
-                <Label>Profit</Label>
+              <Item floatingLabel style={styles.profitItem}>
+                <Label>
+                  Profit
+                  <Text style={[styles.requiredInput,!this.state.hasProfit ? theme.inputError.inputError : null]}> *</Text>
+                </Label>
                 <Input
-                  onChangeText={(text) => {this.trade.profit=text}}
+                  onChangeText={(text) => {
+                    this.setState({profit: text})
+                    text!="" ? this.setState({hasProfit: true}) : this.setState({hasProfit: false})
+                  }}
                 />
               </Item>
             </View>
-            <View style={styles.datetime_container}>
+            <View style={styles.datetimeContainer}>
               <DatePicker
-                style={styles.datepicker_item}
+                style={styles.datepickerItem}
                 date={this.state.date}
                 mode="date"
                 format="YYYY-MM-DD"
@@ -111,51 +138,47 @@ export default class CreateTrade extends Component {
                     borderWidth: 0,
                   }
                 }}
-                onDateChange={(date) => {
-                  this.setState({date: date})
-                  this.trade.date=date
-                }}
+                onDateChange={(date) => this.setState({date: date}) }
               />
-              <Item floatingLabel style={styles.profit_item}>
-                <Label>Hora (HH:MM:SS)</Label>
+              <Item floatingLabel style={styles.profitItem}>
+                <Label>
+                  Hora (HH:MM:SS)
+                  <Text style={[styles.requiredInput,!this.state.hasTime ? theme.inputError.inputError : null]}> *</Text>
+                </Label>
                 <Input
-                  style={styles.profit_input}
-                  value={this.trade.time}
-                  onChangeText={(text) => {this.trade.time=text}}
+                  value={this.time}
+                  onChangeText={(text) => {
+                    this.setState({time: text})
+                    text!="" ? this.setState({hasTime: true}) : this.setState({hasTime: false})
+                  }}
                 />
               </Item>
             </View>
-            <View style={styles.select_container}>
+            <View style={styles.selectContainer}>
               <Picker
-                style={styles.trade_type_select}
-                selectedValue={this.state.trade_type}
-                onValueChange={(itemValue, itemIndex) => {
-                  this.setState({trade_type: itemValue})
-                  this.trade.trade_type=itemValue
-                }}>
+                style={styles.tradeTypeSelect}
+                selectedValue={this.state.tradeType}
+                onValueChange={(itemValue, itemIndex) => this.setState({tradeType: itemValue}) }
+                >
                 <Picker.Item label="A1" value="a1" />
                 <Picker.Item label="A2" value="a2" />
-                <Picker.Item label="A2" value="a2" />
+                <Picker.Item label="A3" value="a3" />
                 <Picker.Item label="20" value="20" />
                 <Picker.Item label="80" value="80" />
                 <Picker.Item label="Otra" value="other" />
               </Picker>
               <Picker
-                style={styles.result_select}
+                style={styles.resultSelect}
                 selectedValue={this.state.result}
-                onValueChange={(itemValue, itemIndex) => {
-                  this.setState({result: itemValue})
-                  this.trade.result=itemValue
-                }}>
+                onValueChange={(itemValue, itemIndex) => this.setState({result: itemValue})}
+                >
                 <Picker.Item label="Ganada" value="w" />
                 <Picker.Item label="Perdida" value="l" />
               </Picker>
             </View>
-            <View style={styles.camera_container}>
+            <View style={styles.cameraContainer}>
               <Camera
-                ref={(cam) => {
-                  this.camera = cam;
-                }}
+                ref={(cam) => {this.camera = cam;}}
                 style={styles.camera}
                 aspect={Camera.constants.Aspect.fill}>
                 <Text style={styles.capture} onPress={this.takePicture.bind(this)}>GUARDAR</Text>
@@ -165,6 +188,20 @@ export default class CreateTrade extends Component {
         </View>
     </StyleProvider>
     );
+  }
+
+  buildTradeObject(){
+    return {
+      enter: this.state.enter,
+      stop: this.state.stop,
+      profit: this.state.profit,
+      date: this.state.date,
+      result: this.state.result,
+      tradeType: this.state.tradeType,
+      date: this.state.date,
+      photo: this.state.photo,
+      time: this.state.time,
+    }
   }
 
   takePicture() {
@@ -178,70 +215,42 @@ export default class CreateTrade extends Component {
             'base64',
             4095)
         .then((ifstream) => {
-            ifstream.open()
-            ifstream.onData((chunk) => {base64 += chunk})
-            ifstream.onError((err) => {console.log('oops', err)})
-            ifstream.onEnd(() => {
-              // Aca obtengo el archivo en base64
-              let img = "data:image/png;base64,"+base64;
-              //this.trade.photo = img;
-              console.warn(JSON.stringify(this.trade));
-              fetch('http://192.168.0.12:8000/trades/', {
-                method: 'POST',
-                headers: {
-                  'Accept': 'application/json',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  image: img,
-                })
-              })
-              .then((response)=>{
+          ifstream.open()
+          ifstream.onData((chunk) => {base64 += chunk})
+          ifstream.onError((err) => {utils.showAlert('Error', err)})
+          ifstream.onEnd(() => {
+            // Aca obtengo el archivo en base64
+            let img = "data:image/png;base64,"+base64;
+            let trade = this.buildTradeObject();
+            trade['photo'] = img;
+            resp = http.http('post', 'trades/', JSON.stringify(trade));
+            if(resp!=null){
+              resp.then((response)=>{
                 this.setState({visible: false});
-                Alert.alert(
-                  'Exito',
-                  'Se ha guardado correctamnte',
-                  [
-                    {text: 'Aceptar', onPress: () => console.log('OK Pressed')},
-                  ],
-                  { cancelable: false }
-                )
+                if(response["ok"]){
+                  utils.showAlert('Exito', 'Se ha guardado correctamnte');
+                }else{
+                  let error = utils.getError(response);
+                  utils.showAlert(error[0], error[1]);
+                }
               })
-              .catch((error) => {
+              resp.catch((error) => {
                 this.setState({visible: false});
-                Alert.alert(
-                  'Error',
-                  'Al conectarse con el servicio',
-                  [
-                    {text: 'Aceptar', onPress: () => console.log('OK Pressed')},
-                  ],
-                  { cancelable: false }
-                )
+                utils.showAlert('Error', 'Al conectarse con el servicio');
               });
-            })
+            }else{
+              this.setState({visible: false});
+            }
+          })
         })
         .catch(err => {
           this.setState({visible: false});
-          Alert.alert(
-            'Error',
-            'Al leer la foto',
-            [
-              {text: 'Aceptar', onPress: () => console.log('OK Pressed')},
-            ],
-            { cancelable: false }
-          )
+          utils.showAlert('Error', 'Al leer la foto');
         });
       })
       .catch(err => {
         this.setState({visible: false});
-        Alert.alert(
-          'Error',
-          'Al sacar la foto',
-          [
-            {text: 'Aceptar', onPress: () => console.log('OK Pressed')},
-          ],
-          { cancelable: false }
-        )
+        utils.showAlert('Error', 'Al sacar la foto');
       });
   }
 

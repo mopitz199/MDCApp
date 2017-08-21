@@ -14,8 +14,11 @@ import {
 import { StackNavigator } from 'react-navigation';
 import CreateTrade from './pages/create-trade';
 
+import './utils/global';
+
+
 const SimpleApp = StackNavigator({
-  create_trade: { screen: CreateTrade }
+  createTrade: { screen: CreateTrade }
 });
 
 AppRegistry.registerComponent('TradeData', () => SimpleApp);

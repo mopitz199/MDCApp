@@ -9,38 +9,38 @@ export const styles = StyleSheet.create({
   form: {
     flex: 1,
   },
-  stop_profit_container: {
+  stopProfitContainer: {
     flexDirection: 'row',
   },
-  stop_item: {
+  stopItem: {
     flex: 1,
   },
-  profit_item: {
+  profitItem: {
     flex: 1,
   },
-  datetime_container:{
+  datetimeContainer:{
     flexDirection: 'row',
   },
-  datepicker_item:{
+  datepickerItem:{
     marginTop:30,
     flex: 1,
     borderColor: '#cccaca',
     borderBottomWidth: 1,
     marginLeft: 14
   },
-  select_container:{
+  selectContainer:{
     flexDirection: 'row',
   },
-  trade_type_select:{
+  tradeTypeSelect:{
     flex: 1,
     marginLeft:15,
     marginRight: -15
   },
-  result_select:{
+  resultSelect:{
     flex: 1,
     marginLeft:30,
   },
-  camera_container:{
+  cameraContainer:{
     flex: 1
   },
   camera: {
@@ -55,5 +55,8 @@ export const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     margin: 10
+  },
+  requiredInput:{
+    color: theme.secondaryColor,
   }
 });
