@@ -11,6 +11,7 @@ import {
   StyleSheet,
   Picker,
   Alert,
+  TouchableHighlight,
 } from 'react-native';
 
 // Style
@@ -41,83 +42,126 @@ import * as theme from '../styles/theme';
 import RNFetchBlob from 'react-native-fetch-blob';
 const fs = RNFetchBlob.fs
 
+// Validations
+import {validate} from '../utils/validation';
 
 export default class CreateTrade extends Component {
 
   constructor(props){
     super(props);
+    const { navigate } = this.props.navigation;
     this.state = {
 
-      enter: null,
-      stop: null,
-      profit: null,
-      date: null,
       result: "w",
       tradeType: "other",
       date: moment().format("YYYY-MM-DD"),
       photo: null,
-      time: null,
 
       visible: false,
 
-      hasEnter: false,
-      hasStop: false,
-      hasProfit: false,
-      hasDate: false,
-      hasTime: false,
+      enter: null,
+      enterError: false,
+      enterErrorMessage: '',
+
+      stop: null,
+      stopError: false,
+      stopErrorMessage: '',
+
+      profit: null,
+      profitError: false,
+      profitErrorMessage: '',
+
+      time: null,
+      timeError: false,
+      timeErrorMessage: '',
+
     };
   }
 
-  static navigationOptions = {
+  static navigationOptions = ({ navigation }) => ({
     title: 'MDC Capital',
-    headerStyle:{ backgroundColor: theme.primaryColor},
+    headerStyle:{ backgroundColor: theme.primaryNormalColor},
     headerTitleStyle:{ color: 'white'},
-  };
+    headerBackTitle: null,
+    headerLeft: null,
+    headerRight: <TouchableHighlight onPress={() => navigation.navigate('login') }>
+      <Icon
+        style={styles.logoutIcon}
+        name="sign-out"
+        size={30}
+        color={theme.primaryTextColor}
+      />
+    </TouchableHighlight>,
+  });
+
+  _logout = () => {
+    console.warn("Logout");
+    global.storage.remove({
+    	key: 'token'
+    });
+  }
 
   render() {
-    const { navigate } = this.props.navigation;
     return (
       <StyleProvider style={getTheme()}>
         <View style={styles.container}>
           <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
           <Form style={styles.form}>
-            <Item floatingLabel>
-              <Label>
-                Enter
-                <Text style={[styles.requiredInput,!this.state.hasEnter ? theme.inputError.inputError : null]}> *</Text>
-              </Label>
-              <Input
-                onChangeText={(text) => {
-                  this.setState({enter: text});
-                  text!="" ? this.setState({hasEnter: true}) : this.setState({hasEnter: false})
-                }}
-              />
-            </Item>
+            <View style={styles.enterContainer}>
+              <Item floatingLabel error={this.state.enterError} style={[styles.inputItem, this.state.enterError?styles.inputItemError:null]}>
+                <Label style={styles.input}>
+                  Enter
+                  <Text style={theme.inputRequired.enabled}> *</Text>
+                </Label>
+                <Input
+                  keyboardType={'numeric'}
+                  autoCorrect={false}
+                  onChangeText={(enter) => {
+                    this.setState({enter: enter});
+                    let v = validate('decimal', enter);
+                    this.setState({enterError: !v[0], enterErrorMessage: v[1]})
+                  }}
+                />
+              </Item>
+              <Text style={styles.errorMessage}>{this.state.enterErrorMessage}</Text>
+            </View>
             <View style={styles.stopProfitContainer}>
-              <Item floatingLabel style={styles.stopItem}>
-                <Label>
-                  Stop
-                  <Text style={[styles.requiredInput,!this.state.hasStop ? theme.inputError.inputError : null]}> *</Text>
-                </Label>
-                <Input
-                  onChangeText={(text) => {
-                    this.setState({stop: text})
-                    text!="" ? this.setState({hasStop: true}) : this.setState({hasStop: false})
-                  }}
-                />
-              </Item>
-              <Item floatingLabel style={styles.profitItem}>
-                <Label>
-                  Profit
-                  <Text style={[styles.requiredInput,!this.state.hasProfit ? theme.inputError.inputError : null]}> *</Text>
-                </Label>
-                <Input
-                  onChangeText={(text) => {
-                    this.setState({profit: text})
-                    text!="" ? this.setState({hasProfit: true}) : this.setState({hasProfit: false})
-                  }}
-                />
-              </Item>
+              <View style={styles.stopContainer}>
+                <Item floatingLabel error={this.state.stopError} style={[styles.inputItem, this.state.stopError?styles.inputItemError:null]}>
+                  <Label style={styles.input}>
+                    Stop
+                    <Text style={theme.inputRequired.enabled}> *</Text>
+                  </Label>
+                  <Input
+                    keyboardType={'numeric'}
+                    autoCorrect={false}
+                    onChangeText={(stop) => {
+                      this.setState({stop: stop})
+                      let v = validate('decimal', stop);
+                      this.setState({stopError: !v[0], stopErrorMessage: v[1]})
+                    }}
+                  />
+                </Item>
+                <Text style={styles.errorMessage}>{this.state.stopErrorMessage}</Text>
+              </View>
+              <View style={styles.profitContainer}>
+                <Item floatingLabel error={this.state.profitError} style={[styles.inputItem, this.state.profitError?styles.inputItemError:null]}>
+                  <Label style={styles.input}>
+                    Profit
+                    <Text style={theme.inputRequired.enabled}> *</Text>
+                  </Label>
+                  <Input
+                    keyboardType={'numeric'}
+                    autoCorrect={false}
+                    onChangeText={(profit) => {
+                      this.setState({profit: profit})
+                      let v = validate('decimal', profit);
+                      this.setState({profitError: !v[0], profitErrorMessage: v[1]})
+                    }}
+                  />
+                </Item>
+                <Text style={styles.errorMessage}>{this.state.profitErrorMessage}</Text>
+              </View>
             </View>
             <View style={styles.datetimeContainer}>
               <DatePicker
@@ -140,19 +184,24 @@ export default class CreateTrade extends Component {
                 }}
                 onDateChange={(date) => this.setState({date: date}) }
               />
-              <Item floatingLabel style={styles.profitItem}>
-                <Label>
-                  Hora (HH:MM:SS)
-                  <Text style={[styles.requiredInput,!this.state.hasTime ? theme.inputError.inputError : null]}> *</Text>
-                </Label>
-                <Input
-                  value={this.time}
-                  onChangeText={(text) => {
-                    this.setState({time: text})
-                    text!="" ? this.setState({hasTime: true}) : this.setState({hasTime: false})
-                  }}
-                />
-              </Item>
+              <View style={styles.timeContainer}>
+                <Item floatingLabel error={this.state.timeError} style={[styles.inputItem, this.state.timeError?styles.inputItemError:null]}>
+                  <Label style={styles.input}>
+                    Hora(HH:MM:SS)
+                    <Text style={theme.inputRequired.enabled}> *</Text>
+                  </Label>
+                  <Input
+                    autoCorrect={false}
+                    value={this.time}
+                    onChangeText={(time) => {
+                      this.setState({time: time})
+                      let v = validate('time', time);
+                      this.setState({timeError: !v[0], timeErrorMessage: v[1]})
+                    }}
+                  />
+                </Item>
+                <Text style={styles.errorMessage}>{this.state.timeErrorMessage}</Text>
+              </View>
             </View>
             <View style={styles.selectContainer}>
               <Picker
@@ -181,7 +230,7 @@ export default class CreateTrade extends Component {
                 ref={(cam) => {this.camera = cam;}}
                 style={styles.camera}
                 aspect={Camera.constants.Aspect.fill}>
-                <Text style={styles.capture} onPress={this.takePicture.bind(this)}>GUARDAR</Text>
+                <Text style={styles.capture} onPress={this._takePicture.bind(this)}>GUARDAR</Text>
               </Camera>
             </View>
           </Form>
@@ -190,7 +239,7 @@ export default class CreateTrade extends Component {
     );
   }
 
-  buildTradeObject(){
+  _buildTradeObject(){
     return {
       enter: this.state.enter,
       stop: this.state.stop,
@@ -204,54 +253,59 @@ export default class CreateTrade extends Component {
     }
   }
 
-  takePicture() {
+  _validateForm(){
+    v = validate('time', this.state.time);
+    return v[0]
+  }
+
+  _takePicture() {
     this.setState({visible: true});
     const options = {};
     this.camera.capture({metadata: options})
-      .then((data) => {
-        let base64 = ''
-        fs.readStream(
-            data["path"],
-            'base64',
-            4095)
-        .then((ifstream) => {
-          ifstream.open()
-          ifstream.onData((chunk) => {base64 += chunk})
-          ifstream.onError((err) => {utils.showAlert('Error', err)})
-          ifstream.onEnd(() => {
-            // Aca obtengo el archivo en base64
-            let img = "data:image/png;base64,"+base64;
-            let trade = this.buildTradeObject();
-            trade['photo'] = img;
-            resp = http.http('post', 'trades/', JSON.stringify(trade));
-            if(resp!=null){
-              resp.then((response)=>{
-                this.setState({visible: false});
-                if(response["ok"]){
-                  utils.showAlert('Exito', 'Se ha guardado correctamnte');
-                }else{
-                  let error = utils.getError(response);
-                  utils.showAlert(error[0], error[1]);
-                }
-              })
-              resp.catch((error) => {
-                this.setState({visible: false});
-                utils.showAlert('Error', 'Al conectarse con el servicio');
-              });
-            }else{
+    .then((data) => {
+      let base64 = ''
+      fs.readStream(
+          data["path"],
+          'base64',
+          4095)
+      .then((ifstream) => {
+        ifstream.open()
+        ifstream.onData((chunk) => {base64 += chunk})
+        ifstream.onError((err) => {utils.showAlert('Error', err)})
+        ifstream.onEnd(() => {
+          // Aca obtengo el archivo en base64
+          let img = "data:image/png;base64,"+base64;
+          let trade = this._buildTradeObject();
+          trade['photo'] = img;
+          resp = http.http('post', 'trades/', JSON.stringify(trade));
+          if(resp!=null){
+            resp.then((response)=>{
               this.setState({visible: false});
-            }
-          })
+              if(response["ok"]){
+                utils.showAlert('Exito', 'Se ha guardado correctamnte');
+              }else{
+                let error = utils.getError(response);
+                utils.showAlert(error[0], error[1]);
+              }
+            })
+            resp.catch((error) => {
+              this.setState({visible: false});
+              utils.showAlert('Error', 'Al conectarse con el servicio');
+            });
+          }else{
+            this.setState({visible: false});
+          }
         })
-        .catch(err => {
-          this.setState({visible: false});
-          utils.showAlert('Error', 'Al leer la foto');
-        });
       })
       .catch(err => {
         this.setState({visible: false});
-        utils.showAlert('Error', 'Al sacar la foto');
+        utils.showAlert('Error', 'Al leer la foto');
       });
+    })
+    .catch(err => {
+      this.setState({visible: false});
+      utils.showAlert('Error', 'Al sacar la foto');
+    });
   }
 
 }

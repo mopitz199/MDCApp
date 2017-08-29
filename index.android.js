@@ -1,1 +1,1 @@
-import TradeData from './app/index';
+import MDC from './app/index';

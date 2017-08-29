@@ -2,7 +2,7 @@
 import * as utils from './utils';
 
 export function http(method, path, data){
-  let fullUrl = global.url+path;
+  let fullUrl = global.apiUrl+path;
   if(method=="get"){
     return fetch(fullUrl, {
       method: method,

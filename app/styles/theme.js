@@ -1,15 +1,20 @@
 import { StyleSheet } from 'react-native';
 
-export const primaryColor = "#7B287D";
-export const secondaryColor = "#FFFBFE";
-export const opositeSecondaryColor = "#393E41";
-export const borderColor = "#D3D0CB";
-export const secondaryBorderColor = "#BC96E6";
-export const errorColor = "#e05454"
+export const primaryNormalColor = "#9c27b0";
+export const primaryLightColor = "#d05ce3";
+export const primaryDarkColor = "#6a0080";
+
+export const secondaryNormalColor = "#ffeb3b";
+export const secondaryLightColor = "#ffff72";
+export const secondaryDarkColor = "#c8b900";
+
+export const primaryTextColor = "rgba(255, 255, 255, 0.80)";
+export const secondaryTextColor = "rgba(0, 0, 0, 0.81)";
+export const errorColor = "#ef5350";
 
 
-export const inputError = StyleSheet.flatten({
-  inputError:{
+export const inputRequired = StyleSheet.flatten({
+  enabled:{
     color: errorColor,
   }
 });

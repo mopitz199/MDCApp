@@ -13,12 +13,15 @@ import {
 
 import { StackNavigator } from 'react-navigation';
 import CreateTrade from './pages/create-trade';
+import Login from './pages/login';
+import Splash from './pages/splash';
 
 import './utils/global';
 
 
 const SimpleApp = StackNavigator({
+  splash: { screen: Splash },
+  login: { screen: Login },
   createTrade: { screen: CreateTrade }
 });
-
-AppRegistry.registerComponent('TradeData', () => SimpleApp);
+AppRegistry.registerComponent('MDC', () => SimpleApp);
