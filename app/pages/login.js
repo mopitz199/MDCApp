@@ -30,13 +30,8 @@ import getTheme from '../../native-base-theme/components';
 // Import utils
 import * as utils from '../utils/utils';
 
-// Import http service
-import * as http from '../utils/http';
-
 // Import the custom theme
 import * as theme from '../styles/theme';
-
-import CreateTrade from './create-trade';
 
 export default class Login extends Component {
 
@@ -78,7 +73,7 @@ export default class Login extends Component {
   }
 
   _onLogin = () =>{
-    //this.setState({visible: true});
+    this.setState({visible: true});
     return fetch(global.url+'api-token-auth/',{
       method: 'POST',
       headers: {
@@ -101,7 +96,7 @@ export default class Login extends Component {
           })
           .then(()=>{
             this.setState({visible:false});
-            this.props.navigation.navigate('createTrade')
+            this.props.navigation.navigate('home')
           });
         }else{
           this.setState({visible: false});

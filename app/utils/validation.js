@@ -40,32 +40,26 @@ export const validation = {
 }
 
 
-export function validate(nameField, value){
-  let resp = [null, null];
-  if(validation.hasOwnProperty(nameField)){
-    console.log("validation")
-    let v = validation[nameField]
-    if(value=='' || value==null){
-      console.log("validation null")
-      resp[0] = false
-      resp[1] = v['presence']['message']
-    }else if(v.hasOwnProperty('format') && !v['format']['pattern'].test(value)){
-      resp[0] = false
-      resp[1] = v['format']['message']
-    }else if(v.hasOwnProperty('length')){
-      let l = v['length'];
-      if(l.hasOwnProperty('minimum') && value.length<l['minimum']['val']){
-        resp[0] = false
-        resp[1] = l['minimum']['message']
-      }else if(l.hasOwnProperty('maximun') && value.length<l['maximun']['val']){
-        resp[0] = false
-        resp[1] = l['maximun']['message']
+export function validate(fields){
+  for (var i = 0; i < fields.length; i++) {
+    let field = fields[i]
+    if(validation.hasOwnProperty(field[0])){
+      let v = validation[field[0]]
+      if(field[1]=='' || field[1]==null){
+        return [false, v['presence']['message'], field.length==3?field[2]:'Desconocido']
       }
-    }else{
-      resp[0] = true
+      if(v.hasOwnProperty('format') && !v['format']['pattern'].test(field[1])){
+        return [false, v['format']['message'], field.length==3?field[2]:'Desconocido']
+      }
+      if(v.hasOwnProperty('length')){
+        let l = v['length'];
+        if(l.hasOwnProperty('minimum') && field[1].length<l['minimum']['val']){
+          return [false, l['minimum']['message'], field.length==3?field[2]:'Desconocido']
+        }else if(l.hasOwnProperty('maximun') && field[1].length>l['maximun']['val']){
+          return [false, l['maximun']['message'], field.length==3?field[2]:'Desconocido']
+        }
+      }
     }
-  }else{
-    resp[0] = true
   }
-  return resp;
+  return [true, null];
 }

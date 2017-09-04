@@ -8,20 +8,28 @@ import React, { Component } from 'react';
 import {
   AppRegistry,
   StyleSheet,
+  TouchableHighlight,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+// Import the custom theme
+import * as theme from './styles/theme';
 
 
-import { StackNavigator } from 'react-navigation';
-import CreateTrade from './pages/create-trade';
+import { StackNavigator,  TabNavigator} from 'react-navigation';
 import Login from './pages/login';
 import Splash from './pages/splash';
+import CreateTrade from './pages/create-trade';
 
 import './utils/global';
+
+import {HomeTab} from './router/home-tab';
 
 
 const SimpleApp = StackNavigator({
   splash: { screen: Splash },
   login: { screen: Login },
-  createTrade: { screen: CreateTrade }
+  home: { screen: HomeTab },
+  createTrade: { screen: CreateTrade },
 });
 AppRegistry.registerComponent('MDC', () => SimpleApp);

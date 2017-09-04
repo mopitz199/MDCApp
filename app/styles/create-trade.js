@@ -7,11 +7,6 @@ export const styles = StyleSheet.flatten({
     backgroundColor: "rgb(255, 255, 255)"
   },
 
-  // Style of the header
-  logoutIcon:{
-    marginRight: 10,
-  },
-
   form: {
     flex: 1,
   },

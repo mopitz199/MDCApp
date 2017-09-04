@@ -9,8 +9,9 @@ export const secondaryLightColor = "#ffff72";
 export const secondaryDarkColor = "#c8b900";
 
 export const primaryTextColor = "rgba(255, 255, 255, 0.80)";
-export const secondaryTextColor = "rgba(0, 0, 0, 0.81)";
+export const secondaryTextColor = "rgba(0, 0, 0, 0.52)";
 export const errorColor = "#ef5350";
+export const borderColor = "rgb(217, 217, 217)";
 
 
 export const inputRequired = StyleSheet.flatten({

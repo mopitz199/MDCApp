@@ -7,7 +7,6 @@ import React, { Component } from 'react';
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
   Image,
   TouchableHighlight
@@ -17,27 +16,21 @@ import {
 import { styles } from '../styles/splash'
 
 // Npm packages
-import { StackNavigator, NavigationActions } from 'react-navigation';
-import { Container, Header, Content, Form, Item, Input, Label, StyleProvider, Button } from 'native-base';
+import { NavigationActions } from 'react-navigation';
+import { StyleProvider } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 // Get the default theme
 import getTheme from '../../native-base-theme/components';
 
-// Import utils
-import * as utils from '../utils/utils';
-
 // Import the custom theme
 import * as theme from '../styles/theme';
 
-import CreateTrade from './create-trade';
-import Login from './login';
 
-
-const resetActionCreateTrade = NavigationActions.reset({
+const resetActionHome = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'createTrade'})]
+  actions: [NavigationActions.navigate({ routeName: 'home'})]
 });
 
 const resetActionLogin = NavigationActions.reset({
@@ -46,7 +39,6 @@ const resetActionLogin = NavigationActions.reset({
 });
 
 export default class Splash extends Component {
-
 
   constructor(props){
     super(props);
@@ -60,7 +52,7 @@ export default class Splash extends Component {
     global.storage.load({
       key: 'token',
     }).then(ret => {
-      this.props.navigation.dispatch(resetActionCreateTrade);
+      this.props.navigation.dispatch(resetActionHome);
     }).catch(err => {
       this.props.navigation.dispatch(resetActionLogin);
     });

@@ -6,7 +6,7 @@ export const styles = StyleSheet.flatten({
     flex: 1,
     paddingTop: 50,
     justifyContent: 'flex-end',
-    backgroundColor: theme.primaryNormalColor
+    backgroundColor: theme.primaryDarkColor
   },
   logo:{
     height: 85,

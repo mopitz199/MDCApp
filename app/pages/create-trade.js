@@ -17,9 +17,7 @@ import {
 // Style
 import { styles } from '../styles/create-trade'
 
-// Npm packages
-import { StackNavigator } from 'react-navigation';
-import { Container, Header, Content, Form, Item, Input, Label, StyleProvider } from 'native-base';
+import { Form, Item, Input, Label, StyleProvider } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import DatePicker from 'react-native-datepicker'
 import Camera from 'react-native-camera';
@@ -79,19 +77,8 @@ export default class CreateTrade extends Component {
   }
 
   static navigationOptions = ({ navigation }) => ({
-    title: 'MDC Capital',
     headerStyle:{ backgroundColor: theme.primaryNormalColor},
-    headerTitleStyle:{ color: 'white'},
-    headerBackTitle: null,
-    headerLeft: null,
-    headerRight: <TouchableHighlight onPress={() => navigation.navigate('login') }>
-      <Icon
-        style={styles.logoutIcon}
-        name="sign-out"
-        size={30}
-        color={theme.primaryTextColor}
-      />
-    </TouchableHighlight>,
+    headerTintColor: 'white'
   });
 
   _logout = () => {
@@ -118,7 +105,7 @@ export default class CreateTrade extends Component {
                   autoCorrect={false}
                   onChangeText={(enter) => {
                     this.setState({enter: enter});
-                    let v = validate('decimal', enter);
+                    let v = validate([['decimal', enter]]);
                     this.setState({enterError: !v[0], enterErrorMessage: v[1]})
                   }}
                 />
@@ -137,7 +124,7 @@ export default class CreateTrade extends Component {
                     autoCorrect={false}
                     onChangeText={(stop) => {
                       this.setState({stop: stop})
-                      let v = validate('decimal', stop);
+                      let v = validate([['decimal', stop]]);
                       this.setState({stopError: !v[0], stopErrorMessage: v[1]})
                     }}
                   />
@@ -155,7 +142,7 @@ export default class CreateTrade extends Component {
                     autoCorrect={false}
                     onChangeText={(profit) => {
                       this.setState({profit: profit})
-                      let v = validate('decimal', profit);
+                      let v = validate([['decimal', profit]]);
                       this.setState({profitError: !v[0], profitErrorMessage: v[1]})
                     }}
                   />
@@ -195,7 +182,7 @@ export default class CreateTrade extends Component {
                     value={this.time}
                     onChangeText={(time) => {
                       this.setState({time: time})
-                      let v = validate('time', time);
+                      let v = validate([['time', time]]);
                       this.setState({timeError: !v[0], timeErrorMessage: v[1]})
                     }}
                   />
@@ -254,58 +241,70 @@ export default class CreateTrade extends Component {
   }
 
   _validateForm(){
-    v = validate('time', this.state.time);
-    return v[0]
+    let fields = [
+      ['decimal', this.state.enter, 'Enter'],
+      ['decimal', this.state.stop, 'Stop'],
+      ['decimal', this.state.profit, 'Profit'],
+      ['time', this.state.time, 'Time']
+    ];
+    v = validate(fields);
+    if(!v[0]){
+      utils.showAlert(v[2], v[1]);
+      return v[0];
+    }
+    return true
   }
 
   _takePicture() {
-    this.setState({visible: true});
-    const options = {};
-    this.camera.capture({metadata: options})
-    .then((data) => {
-      let base64 = ''
-      fs.readStream(
-          data["path"],
-          'base64',
-          4095)
-      .then((ifstream) => {
-        ifstream.open()
-        ifstream.onData((chunk) => {base64 += chunk})
-        ifstream.onError((err) => {utils.showAlert('Error', err)})
-        ifstream.onEnd(() => {
-          // Aca obtengo el archivo en base64
-          let img = "data:image/png;base64,"+base64;
-          let trade = this._buildTradeObject();
-          trade['photo'] = img;
-          resp = http.http('post', 'trades/', JSON.stringify(trade));
-          if(resp!=null){
-            resp.then((response)=>{
+    if(this._validateForm()){
+      this.setState({visible: true});
+      const options = {};
+      this.camera.capture({metadata: options})
+      .then((data) => {
+        let base64 = ''
+        fs.readStream(
+            data["path"],
+            'base64',
+            4095)
+        .then((ifstream) => {
+          ifstream.open()
+          ifstream.onData((chunk) => {base64 += chunk})
+          ifstream.onError((err) => {utils.showAlert('Error', err)})
+          ifstream.onEnd(() => {
+            // Aca obtengo el archivo en base64
+            let img = "data:image/png;base64,"+base64;
+            let trade = this._buildTradeObject();
+            trade['photo'] = img;
+            resp = http.http('post', 'trades/', JSON.stringify(trade));
+            if(resp!=null){
+              resp.then((response)=>{
+                this.setState({visible: false});
+                if(response["ok"]){
+                  utils.showAlert('Exito', 'Se ha guardado correctamnte');
+                }else{
+                  let error = utils.getError(response);
+                  utils.showAlert(error[0], error[1]);
+                }
+              })
+              resp.catch((error) => {
+                this.setState({visible: false});
+                utils.showAlert('Error', 'Al conectarse con el servicio');
+              });
+            }else{
               this.setState({visible: false});
-              if(response["ok"]){
-                utils.showAlert('Exito', 'Se ha guardado correctamnte');
-              }else{
-                let error = utils.getError(response);
-                utils.showAlert(error[0], error[1]);
-              }
-            })
-            resp.catch((error) => {
-              this.setState({visible: false});
-              utils.showAlert('Error', 'Al conectarse con el servicio');
-            });
-          }else{
-            this.setState({visible: false});
-          }
+            }
+          })
         })
+        .catch(err => {
+          this.setState({visible: false});
+          utils.showAlert('Error', 'Al leer la foto');
+        });
       })
       .catch(err => {
         this.setState({visible: false});
-        utils.showAlert('Error', 'Al leer la foto');
+        utils.showAlert('Error', 'Al sacar la foto');
       });
-    })
-    .catch(err => {
-      this.setState({visible: false});
-      utils.showAlert('Error', 'Al sacar la foto');
-    });
+    }
   }
 
 }
