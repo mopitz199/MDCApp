@@ -35,14 +35,12 @@ import * as theme from '../styles/theme';
 // Components
 import TradeItemList from '../components/trade-item-list';
 
-// Action android button
-import ActionButton from 'react-native-action-button';
+import CustomActionButton from '../components/action-button';
 
 export default class MyTrades extends Component {
 
   constructor(props){
     super(props);
-    const { navigate } = this.props.navigation;
     this.state = {
       visible: false,
       readyToRender: false,
@@ -107,11 +105,7 @@ export default class MyTrades extends Component {
               refreshing = {this.state.refreshing}
               onRefresh = {this._handleRefresh}
             />
-            <ActionButton
-              buttonColor={theme.secondaryNormalColor}
-              buttonTextStyle={{color: theme.secondaryDarkColor}}
-              onPress={() => navigate('createTrade') }
-            />
+            <CustomActionButton navigate={navigate} />
           </View>
         </StyleProvider>
       );
