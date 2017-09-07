@@ -32,6 +32,11 @@ export default class TradeItemList extends Component {
     }
   }
 
+
+  _onPressButton = () => {
+    this.props.navigate('photo');
+  }
+
   _getTradeDirection = () => {
     let profit = parseFloat(this.props.data.profit)
     let enter = parseFloat(this.props.data.enter)
@@ -44,33 +49,35 @@ export default class TradeItemList extends Component {
 
   render() {
     return (
-      <View style={styles.tradeItemList}>
-        <Image
-          style={styles.tradeItemListLeft}
-          source={{uri: this.props.data.photoThumbnail}}
-        />
-        <View style={styles.tradeItemListCenter}>
-          <View style={styles.tradeItemListTopInfo}>
-            <Text style={styles.date}>{this.props.data.date}</Text>
-            <Text style={styles.time}>{this.props.data.time}</Text>
-          </View>
-          <View style={styles.tradeItemListBottomInfo}>
-            <View style={styles.winLose}>
-              <Icon
-                style={styles.winLoseIcon}
-                name={this._getTradeDirection()=='bull'?'arrow-up':'arrow-down'}
-                size={20}
-                color={theme.secondaryDarkColor}
-              />
-              <Text style={styles.winLoseText}>{this._getTradeDirection()=='bull'?'Largo':'Corto'}</Text>
+      <TouchableHighlight onPress={this._onPressButton}>
+        <View style={styles.tradeItemList}>
+          <Image
+            style={styles.tradeItemListLeft}
+            source={{uri: this.props.data.photoThumbnail}}
+          />
+          <View style={styles.tradeItemListCenter}>
+            <View style={styles.tradeItemListTopInfo}>
+              <Text style={styles.date}>{this.props.data.date}</Text>
+              <Text style={styles.time}>{this.props.data.time}</Text>
             </View>
-            <Text style={styles.tradeType}>Tipo: {this.props.data.tradeType}</Text>
+            <View style={styles.tradeItemListBottomInfo}>
+              <View style={styles.winLose}>
+                <Icon
+                  style={styles.winLoseIcon}
+                  name={this._getTradeDirection()=='bull'?'arrow-up':'arrow-down'}
+                  size={20}
+                  color={theme.secondaryDarkColor}
+                />
+                <Text style={styles.winLoseText}>{this._getTradeDirection()=='bull'?'Largo':'Corto'}</Text>
+              </View>
+              <Text style={styles.tradeType}>Tipo: {this.props.data.tradeType}</Text>
+            </View>
+          </View>
+          <View style={styles.tradeItemListRight}>
+            <Text style={[styles.result, this.props.data.result=='w'?styles.winResult:styles.loseResult]} >{this._calculateResult()}</Text>
           </View>
         </View>
-        <View style={styles.tradeItemListRight}>
-          <Text style={[styles.result, this.props.data.result=='w'?styles.winResult:styles.loseResult]} >{this._calculateResult()}</Text>
-        </View>
-      </View>
+      </TouchableHighlight>
     );
   }
 
