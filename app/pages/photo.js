@@ -17,6 +17,7 @@ import {
 
 // Npm packages
 import { StackNavigator, NavigationActions } from 'react-navigation';
+import PhotoView from 'react-native-photo-view';
 
 // Npm packages
 import Icon from 'react-native-vector-icons/FontAwesome';
@@ -29,15 +30,19 @@ export default class Photo extends Component {
 
   constructor(props){
     super(props);
-    this.navigate = this.props.navigation.navigate;
   }
 
   render() {
+    const { params } = this.props.navigation.state;
+    console.warn(params.url)
     return (
-      <Image
-        style={{width: 50, height: 50}}
-        source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
-      />
+      <PhotoView
+      source={{uri: 'https://facebook.github.io/react/img/logo_og.png'}}
+      minimumZoomScale={0.5}
+      maximumZoomScale={3}
+      androidScaleType="center"
+      onLoad={() => console.log("Image loaded!")}
+      style={{width: 300, height: 300}} />
     );
   }
 

@@ -45,8 +45,7 @@ export default class MyTrades extends Component {
       visible: false,
       readyToRender: false,
       refreshing: false,
-    };
-
+    }
   }
 
 
@@ -101,7 +100,7 @@ export default class MyTrades extends Component {
             <FlatList
               data = {this.state.data}
               keyExtractor={this._keyExtractor}
-              renderItem={({item}) => <TradeItemList data={item} />}
+              renderItem={({item}) => <TradeItemList data={[item, navigate]} />}
               refreshing = {this.state.refreshing}
               onRefresh = {this._handleRefresh}
             />
