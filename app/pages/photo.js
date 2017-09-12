@@ -10,6 +10,7 @@ import {
   StyleSheet,
   TouchableHighlight,
   ScrollView,
+  Image
 } from 'react-native';
 
 import Dimensions from 'Dimensions';
@@ -27,14 +28,17 @@ import Spinner from 'react-native-loading-spinner-overlay';
 // Import the custom theme
 import * as theme from '../styles/theme';
 
-import Image from 'react-native-transformable-image';
+import CustomImage from '../components/custom-image';
+
 import Orientation from 'react-native-orientation';
+import ImageZoom from 'react-native-image-pan-zoom';
 
 export default class Photo extends Component {
 
   static navigationOptions = ({ navigation }) => ({
     headerStyle:{ backgroundColor: theme.primaryNormalColor},
     headerTintColor: 'white'
+    //header: null
   });
 
   constructor(props){
@@ -42,25 +46,53 @@ export default class Photo extends Component {
     this.state = {
       visible: true,
       width: Dimensions.get('window').width,
+      height: Dimensions.get('window').height
     }
+
   }
 
-  componentDidMount() {
-    Orientation.addOrientationListener(this._orientationDidChange);
-    this.setState({visible:false})
+  componentDidMount(){
+    Dimensions.addEventListener('change', ({ window: { width, height } }) => {
+      if (this.refs.myRef){
+        this.setState({width: width, height:height})
+      }
+    });
   }
 
-  _orientationDidChange = (orientation) => {
-    this.setState({width: Dimensions.get('window').width})
-  }
 
   render() {
     const { params } = this.props.navigation.state;
     return (
-      <Image
-        style={styles.photo}
-        source={{uri: params.url}}
-      />
+      <View
+        style={{
+          borderColor:'orange',
+          borderWidth: 2,
+          display: 'flex',
+          justifyContent:'center',
+          alignItems:'center'
+        }}
+        ref="myRef"
+      >
+        <ImageZoom cropWidth={this.state.width}
+                   cropHeight={this.state.height}
+                   imageWidth={this.state.width}
+                   imageHeight={this.state.height}
+                   >
+            <View style={{
+              display: 'flex',
+              flex: 1,
+              backgroundColor:'black',
+              justifyContent:'center',
+              alignItems:'center',
+            }}>
+              <CustomImage
+                url = {params.url}
+                maxWidth = {Dimensions.get('screen').width}
+                maxHeight = {Dimensions.get('screen').height}
+              />
+            </View>
+        </ImageZoom>
+      </View>
     );
   }
 

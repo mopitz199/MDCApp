@@ -24,7 +24,7 @@ export default class HomeRightHeader extends Component {
   render() {
     return (
       <View style={styles.rightContainer}>
-        <TouchableHighlight onPress={() => navigation.navigate('login') }>
+        <TouchableHighlight onPress={() => this.props.navigate('login') }>
           <Icon
             style={styles.logoutIcon}
             name="sign-out"

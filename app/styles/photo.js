@@ -7,13 +7,4 @@ export const styles = StyleSheet.flatten({
     alignItems: 'center',
     justifyContent: 'center'
   },
-  photo:{
-    flex: 1,
-    backgroundColor: 'black',
-    borderWidth: 1,
-    borderColor: 'red',
-    /*width: null,
-    height: null,
-    resizeMode: 'cover'*/
-  }
 });

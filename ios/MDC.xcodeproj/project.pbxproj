@@ -62,6 +62,7 @@
 		3139A433F62A473F88F2E260 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D136E1C77C4C495F87FE36F8 /* Zocial.ttf */; };
 		895A60AB88D9481BAD77CDFA /* libRNPhotoView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BC5EA4A6754A4510977E1F17 /* libRNPhotoView.a */; };
 		C0F53B07C454494196813D70 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 88FFB40662C944F1BBE59366 /* libRCTOrientation.a */; };
+		B3719C18640F4D27958F484B /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = C981EAA2D97B455E9CA3EFDB /* OFL.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -313,6 +314,7 @@
 		BC5EA4A6754A4510977E1F17 /* libRNPhotoView.a */ = {isa = PBXFileReference; name = "libRNPhotoView.a"; path = "libRNPhotoView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		AA1BD3ACA32A4F999592A605 /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; name = "RCTOrientation.xcodeproj"; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		88FFB40662C944F1BBE59366 /* libRCTOrientation.a */ = {isa = PBXFileReference; name = "libRCTOrientation.a"; path = "libRCTOrientation.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		C981EAA2D97B455E9CA3EFDB /* OFL.txt */ = {isa = PBXFileReference; name = "OFL.txt"; path = "../node_modules/native-base/Fonts/OFL.txt"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -577,6 +579,7 @@
 				8FC56F9F49E5461E8C517F9E /* Octicons.ttf */,
 				4EEF79A90EA048B9BF00CC57 /* SimpleLineIcons.ttf */,
 				D136E1C77C4C495F87FE36F8 /* Zocial.ttf */,
+				C981EAA2D97B455E9CA3EFDB /* OFL.txt */,
 			);
 			name = Resources;
 			sourceTree = "<group>";
@@ -962,6 +965,7 @@
 				A2243F4C47FB47A7BB632E14 /* Octicons.ttf in Resources */,
 				F3A4AE0D4A2F4E979C83AFE7 /* SimpleLineIcons.ttf in Resources */,
 				3139A433F62A473F88F2E260 /* Zocial.ttf in Resources */,
+				B3719C18640F4D27958F484B /* OFL.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

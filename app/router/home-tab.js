@@ -46,5 +46,5 @@ HomeTab.navigationOptions = ({ navigation }) => ({
   headerTitleStyle:{ color: 'white'},
   headerBackTitle: null,
   headerLeft: null,
-  headerRight: <HomeRightHeader />
+  headerRight: <HomeRightHeader navigate={navigation.navigate} />
 });
