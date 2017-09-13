@@ -19,7 +19,7 @@ import * as theme from '../styles/theme';
 import { homeTabStyles } from '../styles/home-tab';
 
 import { StackNavigator,  TabNavigator} from 'react-navigation';
-import CreateTrade from '../pages/create-trade';
+import Statistics from '../pages/statistics';
 import MyTrades from '../pages/my-trades';
 import HomeRightHeader from '../components/home-right-header';
 
@@ -28,9 +28,9 @@ export const HomeTab = TabNavigator({
   myTrades: {
     screen: MyTrades,
   },
-  /*createTrade: {
-    screen: CreateTrade,
-  },*/
+  statistics: {
+    screen: Statistics,
+  },
 }, {
   tabBarOptions: {
     inactiveTintColor: theme.primaryTextColor,
