@@ -75,7 +75,7 @@ export default class TradeItemList extends Component {
                   style={styles.winLoseIcon}
                   name={this._getTradeDirection()=='bull'?'arrow-up':'arrow-down'}
                   size={20}
-                  color={theme.secondaryDarkColor}
+                  color={theme.primaryLightColor}
                 />
                 <Text style={styles.winLoseText}>{this._getTradeDirection()=='bull'?'Largo':'Corto'}</Text>
               </View>

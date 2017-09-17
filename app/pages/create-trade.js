@@ -27,6 +27,8 @@ import moment from 'moment';
 // Get the default theme
 import getTheme from '../../native-base-theme/components';
 
+import CustomCalendarIcon from '../components/custom-calendar-icon';
+
 // Import utils
 import * as utils from '../utils/utils';
 
@@ -156,17 +158,16 @@ export default class CreateTrade extends Component {
                 date={this.state.date}
                 mode="date"
                 format="YYYY-MM-DD"
+                iconComponent= {<CustomCalendarIcon />}
                 confirmBtnText="Confirm"
                 cancelBtnText="Cancel"
                 customStyles={{
-                  dateIcon: {
-                    position: 'absolute',
-                    left: -10,
-                    top: 4,
-                  },
                   dateInput: {
                     marginLeft: -20,
                     borderWidth: 0,
+                  },
+                  dateText:{
+                    color: theme.primaryTextColor,
                   }
                 }}
                 onDateChange={(date) => this.setState({date: date}) }
@@ -201,6 +202,8 @@ export default class CreateTrade extends Component {
                 <Picker.Item label="A3" value="a3" />
                 <Picker.Item label="20" value="20" />
                 <Picker.Item label="80" value="80" />
+                <Picker.Item label="CBOT" value="cbot" />
+                <Picker.Item label="XOVER" value="xover" />
                 <Picker.Item label="Otra" value="other" />
               </Picker>
               <Picker

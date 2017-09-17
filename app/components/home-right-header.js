@@ -29,7 +29,7 @@ export default class HomeRightHeader extends Component {
             style={styles.logoutIcon}
             name="sign-out"
             size={30}
-            color={theme.primaryTextColor}
+            color={theme.secondaryTextColor}
           />
         </TouchableHighlight>
       </View>

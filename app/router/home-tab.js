@@ -21,6 +21,7 @@ import { homeTabStyles } from '../styles/home-tab';
 import { StackNavigator,  TabNavigator} from 'react-navigation';
 import Statistics from '../pages/statistics';
 import MyTrades from '../pages/my-trades';
+import OtherTrades from '../pages/other-trades';
 import HomeRightHeader from '../components/home-right-header';
 
 
@@ -31,10 +32,14 @@ export const HomeTab = TabNavigator({
   statistics: {
     screen: Statistics,
   },
+  brotherTrades: {
+    screen: OtherTrades,
+  },
 }, {
   tabBarOptions: {
-    inactiveTintColor: theme.primaryTextColor,
-    activeTintColor: theme.secondaryDarkColor,
+    inactiveTintColor: theme.inactiveTextColor,
+    indicatorStyle: homeTabStyles.indicatorStyle,
+    activeTintColor: theme.primaryNormalColor,
     style: homeTabStyles.tabbar,
     tabStyle: homeTabStyles.tab
   },

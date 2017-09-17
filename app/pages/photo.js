@@ -65,8 +65,6 @@ export default class Photo extends Component {
     return (
       <View
         style={{
-          borderColor:'orange',
-          borderWidth: 2,
           display: 'flex',
           justifyContent:'center',
           alignItems:'center'

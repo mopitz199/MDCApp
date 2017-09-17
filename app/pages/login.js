@@ -30,6 +30,9 @@ import getTheme from '../../native-base-theme/components';
 // Import utils
 import * as utils from '../utils/utils';
 
+// Import http service
+import * as http from '../utils/http';
+
 // Import the custom theme
 import * as theme from '../styles/theme';
 
@@ -70,6 +73,34 @@ export default class Login extends Component {
     global.storage.remove({
     	key: 'token'
     });
+    global.storage.remove({
+    	key: 'user'
+    });
+  }
+
+  _getCurrentUser(){
+    resp = http.http('GET', 'users/getCurrentUser/')
+    if(resp!=null){
+      resp.then((response) => response.json())
+      .then((responseJson)=>{
+        global.storage.save({
+          key: 'user',
+          data: responseJson,
+          expires: 1000 * 3600 * 24 * 7
+        })
+        .then(()=>{
+          this.setState({visible: false});
+          this.props.navigation.navigate('home')
+        });
+      })
+      .catch((error) => {
+        this.setState({visible: false});
+        utils.showAlert('Error', 'Al conectarse con el servicio');
+      });
+    }else{
+      this.setState({visible: false});
+      utils.showAlert('Error', 'Al conectarse con el servicio');
+    }
   }
 
   _onLogin = () =>{
@@ -88,15 +119,13 @@ export default class Login extends Component {
       .then((response) => response.json())
       .then((responseJson) => {
         if(responseJson.hasOwnProperty('token')){
-          this.setState({visible:true});
           global.storage.save({
           	key: 'token',
           	data: responseJson.token,
-          	expires: 1000 * 3600
+          	expires: 1000 * 3600 * 24 * 7
           })
           .then(()=>{
-            this.setState({visible:false});
-            this.props.navigation.navigate('home')
+            this._getCurrentUser();
           });
         }else{
           this.setState({visible: false});
@@ -140,7 +169,7 @@ export default class Login extends Component {
             style={styles.loginButton}
             onPress={this._onLogin}
             full>
-            <Text style={styles.loginText}>Sign in!</Text>
+            <Text style={styles.loginText}>SIGN IN!</Text>
           </Button>
         </View>
       </StyleProvider>

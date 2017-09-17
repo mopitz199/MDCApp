@@ -6,7 +6,7 @@ export const styles = StyleSheet.flatten({
     flex: 1,
     paddingTop: 50,
     justifyContent: 'flex-end',
-    backgroundColor: theme.primaryDarkColor
+    backgroundColor: theme.primaryNormalColor
   },
   logo:{
     height: 85,
@@ -15,29 +15,29 @@ export const styles = StyleSheet.flatten({
   },
   title:{
     alignSelf: 'center',
-    color: theme.primaryTextColor,
+    color: theme.secondaryTextColor,
     fontSize: 40,
     fontWeight: 'bold',
     marginBottom: 25,
   },
   inputItem:{
     marginBottom: 25,
-    marginLeft: 10,
-    marginRight: 10,
+    marginLeft: 20,
+    marginRight: 20,
   },
   label:{
-    color: theme.primaryTextColor,
+    color: theme.secondaryTextColor,
   },
   input:{
-    color: theme.primaryTextColor,
+    color: theme.secondaryTextColor,
   },
   loginButton:{
     marginBottom: 30,
-    backgroundColor: theme.secondaryNormalColor,
+    backgroundColor: 'white',
   },
   loginText:{
     fontSize: 18,
-    color: theme.secondaryTextColor,
+    color: theme.primaryNormalColor,
     fontWeight: '400',
   }
 });

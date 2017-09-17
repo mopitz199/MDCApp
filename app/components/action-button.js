@@ -23,8 +23,8 @@ export default class CustomActionButton extends Component {
   render() {
     return (
       <ActionButton
-        buttonColor={theme.secondaryNormalColor}
-        buttonTextStyle={{color: theme.secondaryDarkColor}}
+        buttonColor={theme.primaryNormalColor}
+        buttonTextStyle={{color: 'white'}}
         onPress={() => this.props.navigate('createTrade') }
       />
     );

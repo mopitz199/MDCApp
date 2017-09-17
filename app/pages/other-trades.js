@@ -13,7 +13,7 @@ import {
 } from 'react-native';
 
 // Style
-import { styles } from '../styles/my-trades';
+import { styles } from '../styles/other-trades';
 
 // Npm packages
 import { StyleProvider } from 'native-base';
@@ -37,7 +37,7 @@ import TradeItemList from '../components/trade-item-list';
 
 import CustomActionButton from '../components/action-button';
 
-export default class MyTrades extends Component {
+export default class OtherTrades extends Component {
 
   constructor(props){
     super(props);
@@ -55,7 +55,7 @@ export default class MyTrades extends Component {
 
 
   static navigationOptions = ({ navigation }) => ({
-    tabBarLabel: 'My Trades'
+    tabBarLabel: 'Brother'
   });
 
 
@@ -64,7 +64,7 @@ export default class MyTrades extends Component {
     global.storage.load({
       key: 'user',
     }).then(ret => {
-      resp = http.http('GET', 'trades/?user='+ret.id)
+      resp = http.http('GET', 'trades/?user=2')
       if(resp!=null){
         resp.then((response) => response.json())
         .then((responseJson)=>{
@@ -78,7 +78,7 @@ export default class MyTrades extends Component {
         this.setState({visible: false, refreshing: false});
         utils.showAlert('Error', 'Al conectarse con el servicio');
       }
-    })
+    });
   }
 
 
@@ -108,7 +108,6 @@ export default class MyTrades extends Component {
               refreshing = {this.state.refreshing}
               onRefresh = {this._handleRefresh}
             />
-            <CustomActionButton navigate={navigate} />
           </View>
         </StyleProvider>
       );

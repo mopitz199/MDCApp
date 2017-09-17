@@ -5,18 +5,22 @@
  */
 import React, { Component } from 'react';
 import {
+  Platform,
   View,
   Text,
   StyleSheet,
   TouchableHighlight,
   FlatList,
+  ScrollView,
+  Button,
+  TouchableNativeFeedback
 } from 'react-native';
 
 // Style
 import { styles } from '../styles/statistics';
 
 // Npm packages
-import { StyleProvider, Button } from 'native-base';
+import { StyleProvider } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Spinner from 'react-native-loading-spinner-overlay';
 
@@ -35,22 +39,120 @@ import * as theme from '../styles/theme';
 // Action android button
 import ActionButton from 'react-native-action-button';
 
-import DatePicker from 'react-native-datepicker'
+import DatePicker from 'react-native-datepicker';
+
+import Dimensions from 'Dimensions';
+
+import moment from 'moment';
 
 import { Pie } from 'react-native-pathjs-charts'
 
+import CustomCalendarIcon from '../components/custom-calendar-icon';
+
 export default class Statistics extends Component {
 
-  render() {
+  constructor(props){
+    super(props);
+    const { navigate } = this.props.navigation;
+    this.state = {
+      visible: false,
+      fromDate: moment().format("YYYY-MM-DD"),
+      toDate: moment().format("YYYY-MM-DD"),
+      dataLoaded: false,
+      hasData: false,
+      won: 0,
+      lost: 0,
+      height: Dimensions.get('window').height,
+      platform: Platform.OS
+    };
+  }
 
+  _customCalendarIcon = () => {
+    return (
+      <CustomCalendarIcon />
+    )
+  }
+
+
+  componentWillMount(){
+    this._loadStatistics();
+  }
+
+  _loadStatistics = () =>{
+    let params = '?from='+this.state.fromDate+'&to='+this.state.toDate;
+    this.setState({visible: true});
+    resp = http.http('GET', 'trades/getStatistics/'+params);
+    if(resp!=null){
+      resp.then((response) => response.json())
+      .then((responseJson)=>{
+        let won = responseJson['won']
+        let lost = -1*responseJson['lost']
+        this.setState({
+          visible: false,
+          dataLoaded: true,
+          won: won,
+          lost: lost,
+          hasData: (won>0 && lost>0)
+        });
+      })
+      resp.catch((error) => {
+        this.setState({visible: false});
+        utils.showAlert('Error', 'Al conectarse con el servicio');
+      });
+    }else{
+      this.setState({visible: false});
+    }
+  }
+
+  _onPressButton = () => {
+    this._loadStatistics()
+  }
+
+  _renderEmptyChart(){
+    return (
+      <View style={styles.emptyChart}>
+        <Text style={styles.emptyText}>No existen datos para comparar</Text>
+        <Icon
+          name="frown-o"
+          size={100}
+        />
+      </View>
+    )
+  }
+
+  _androidButton(){
+    return (
+      <TouchableNativeFeedback
+          onPress={this._onPressButton}
+          background={TouchableNativeFeedback.Ripple('#616161')}>
+          <View style={styles.loadButton}>
+            <Text style={styles.loadTextButton}>CARGAR</Text>
+          </View>
+      </TouchableNativeFeedback>
+    )
+  }
+
+  _iosButton(){
+    return(
+      <TouchableHighlight
+        onPress={this._onPressButton}
+        >
+        <View style={styles.loadButton}>
+          <Text style={styles.loadTextButton}>CARGAR</Text>
+        </View>
+      </TouchableHighlight>
+    )
+  }
+
+  _renderChart(){
     let data = [{
-      "name": "30 Ticks",
-      "population": 30,
+      "name": this.state.lost+" Ticks",
+      "population": this.state.lost,
 
       "color": {'r':238,'g':83,'b':80}
     }, {
-      "name": "46 Ticks",
-      "population": 46,
+      "name": this.state.won+" Ticks",
+      "population": this.state.won,
       "color": {'r':48,'g':181,'b':14}
     }]
     let options = {
@@ -58,7 +160,7 @@ export default class Statistics extends Component {
       height: 300,
       color: '#2980B9',
       r: 0,
-      R: 150,
+      R: 120,
       legendPosition: 'topLeft',
       animate: {
         type: 'oneByOne',
@@ -67,65 +169,90 @@ export default class Statistics extends Component {
       },
       label: {
         fontFamily: 'Arial',
-        fontSize: 20,
+        fontSize: 15,
         fontWeight: true,
         color: '#ECF0F1'
       }
     }
 
     return (
-      <View style={styles.container}>
-        <View style={styles.formContainer}>
-          <View style={styles.datesContainer}>
-            <DatePicker
-              style={styles.datepickerItem}
-              mode="date"
-              format="YYYY-MM-DD"
-              confirmBtnText="Confirm"
-              cancelBtnText="Cancel"
-              customStyles={{
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0
-                },
-                dateInput: {
-                  marginLeft: 36
-                }
-              }}
-            />
-            <DatePicker
-              style={styles.datepickerItem}
-              mode="date"
-              format="YYYY-MM-DD"
-              confirmBtnText="Confirm"
-              cancelBtnText="Cancel"
-              customStyles={{
-                dateIcon: {
-                  position: 'absolute',
-                  left: 0,
-                  top: 4,
-                  marginLeft: 0
-                },
-                dateInput: {
-                  marginLeft: 36
-                }
-              }}
-            />
-          </View>
-          <Button info style={styles.loadButton}><Text> Cargar </Text></Button>
-        </View>
-        <View style={styles.pieContainer}>
-          <Pie data={data}
-            options={options}
-            accessorKey="population"
-            color="#2980B9"
-            legendPosition="topLeft"
-            />
-        </View>
+      <View style={styles.pieContainer}>
+        <Pie data={data}
+          options={options}
+          accessorKey="population"
+          color="#2980B9"
+          legendPosition="topLeft"
+          />
       </View>
     )
+  }
+
+
+  render() {
+    if(this.state.dataLoaded){
+      return (
+        <StyleProvider style={getTheme()}>
+          <View
+            style={{
+              backgroundColor: 'white',
+              flex: 1,
+            }}
+            ref="myRef"
+            >
+            <ScrollView contentContainerStyle={styles.container}>
+              <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
+              <View style={styles.formContainer}>
+                <View style={styles.datesContainer}>
+                  <DatePicker
+                    style={[styles.datepickerItem, styles.firstDatepickerItem]}
+                    mode="date"
+                    date={this.state.fromDate}
+                    onDateChange={(date) => {this.setState({fromDate: date})}}
+                    format="YYYY-MM-DD"
+                    iconComponent= {this._customCalendarIcon()}
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                      dateInput: {
+                        marginLeft: 16,
+                        borderWidth: 0
+                      },
+                      dateText:{
+                        color: theme.primaryTextColor,
+                      }
+                    }}
+                  />
+                  <DatePicker
+                    style={styles.datepickerItem}
+                    mode="date"
+                    date={this.state.toDate}
+                    onDateChange={(date) => {this.setState({toDate: date})}}
+                    format="YYYY-MM-DD"
+                    iconComponent= {this._customCalendarIcon()}
+                    confirmBtnText="Confirm"
+                    cancelBtnText="Cancel"
+                    customStyles={{
+                      dateInput: {
+                        marginLeft: 16,
+                        borderWidth: 0
+                      },
+                      dateText:{
+                        color: theme.primaryTextColor,
+                      }
+                    }}
+                  />
+                </View>
+                {this.state.platform=='ios'?this._iosButton():this._androidButton()}
+              </View>
+              {(this.state.hasData)?this._renderChart():this._renderEmptyChart()}
+            </ScrollView>
+          </View>
+        </StyleProvider>
+      )
+    }else{
+      return null
+    }
+
   }
 
 }

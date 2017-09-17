@@ -14,12 +14,12 @@ export const styles = StyleSheet.flatten({
     marginBottom: 30,
   },
   title:{
-    color: theme.primaryTextColor,
+    color: theme.secondaryTextColor,
     fontSize: 20,
     fontWeight: '300',
   },
   loadingText:{
     marginTop: 70,
-    color: theme.primaryTextColor,
+    color: theme.secondaryTextColor,
   }
 });

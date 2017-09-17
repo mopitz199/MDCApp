@@ -18,7 +18,7 @@ export const styles = StyleSheet.flatten({
   },
 
   input:{
-    color: theme.secondaryTextColor,
+    color: theme.primaryTextColor,
   },
 
   errorMessage:{
@@ -74,13 +74,13 @@ export const styles = StyleSheet.flatten({
     flex: 1,
     marginLeft:15,
     marginRight: -15,
-    color: theme.secondaryTextColor,
+    color: theme.primaryTextColor,
   },
 
   resultSelect:{
     flex: 1,
     marginLeft:30,
-    color: theme.secondaryTextColor,
+    color: theme.primaryTextColor,
   },
 
   // Styles of the camera
@@ -95,7 +95,7 @@ export const styles = StyleSheet.flatten({
   capture: {
     flex: 0,
     backgroundColor: theme.primaryNormalColor,
-    color: theme.primaryTextColor,
+    color: theme.secondaryTextColor,
     borderRadius: 5,
     padding: 10,
     margin: 10

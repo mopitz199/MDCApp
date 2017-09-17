@@ -1,15 +1,11 @@
 import { StyleSheet } from 'react-native';
 
-export const primaryNormalColor = "#9c27b0";
-export const primaryLightColor = "#d05ce3";
-export const primaryDarkColor = "#6a0080";
+export const primaryNormalColor = "#1A237E";
+export const primaryLightColor = "#5C6BC0";
 
-export const secondaryNormalColor = "#ffeb3b";
-export const secondaryLightColor = "#ffff72";
-export const secondaryDarkColor = "#c8b900";
-
-export const primaryTextColor = "rgba(255, 255, 255, 0.80)";
-export const secondaryTextColor = "rgba(0, 0, 0, 0.52)";
+export const primaryTextColor = "#616161";
+export const secondaryTextColor = "#ffffff";
+export const inactiveTextColor = "#BDBDBD";
 
 export const borderColor = "rgb(217, 217, 217)";
 

@@ -54,6 +54,7 @@ export const styles = StyleSheet.flatten({
   },
   tradeType:{
     fontSize: 18,
+    fontWeight: 'bold'
   },
   tradeItemListRight:{
 

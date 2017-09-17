@@ -3,10 +3,13 @@ import * as theme from './theme';
 const platform = Platform.OS;
 export const styles = StyleSheet.flatten({
   container: {
-    flex: 1,
+    //height: 300,
+    //width: 300,
     alignItems: 'center',
     backgroundColor: 'white',
     padding: 20,
+    //borderWidth: 2,
+    //borderColor: 'blue',
   },
   formContainer:{
     flexDirection: 'column',
@@ -17,9 +20,17 @@ export const styles = StyleSheet.flatten({
     alignItems: 'center',
   },
   loadButton:{
-    alignSelf: 'center',
+    flex:1,
+    height: 40,
     marginTop: 20,
     marginBottom: 20,
+    backgroundColor:theme.primaryNormalColor,
+    alignItems:'center',
+    justifyContent: 'center',
+  },
+  loadTextButton:{
+    fontSize: 17,
+    color: 'white',
   },
   datesContainer:{
     flexDirection: 'row',
@@ -27,5 +38,20 @@ export const styles = StyleSheet.flatten({
   },
   datepickerItem:{
     flex: 1,
+    borderBottomWidth: 1,
+    borderBottomColor: theme.borderColor,
   },
+  firstDatepickerItem:{
+    marginRight: 10,
+  },
+  emptyChart:{
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex:1,
+    alignSelf: 'stretch'
+  },
+  emptyText:{
+    fontSize: 20,
+    marginBottom: 30
+  }
 });

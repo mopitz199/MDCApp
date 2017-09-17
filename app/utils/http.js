@@ -10,7 +10,9 @@ export function http(method, path, data=null){
       return fetch(fullUrl, {
         method: method,
         headers: {
-          'Authorization': 'Token '+ret
+          'Authorization': 'Token '+ret,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
         }
       })
     }).catch(err => {
