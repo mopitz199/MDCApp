@@ -43,7 +43,10 @@ export default class TradeItemList extends Component {
 
 
   _onPressButton = () => {
-    this.state.navigate('photo', { url: this.state.data.photo });
+    this.state.navigate('photo', {
+      url: this.state.data.photo,
+      id: this.state.data.id
+    });
   }
 
   _getTradeDirection = () => {

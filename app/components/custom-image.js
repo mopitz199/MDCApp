@@ -17,57 +17,62 @@ import styles from '../styles/custom-image';
 
 export default class CustomImage extends Component {
 
-  state = {
-    maxWidth: null,
-    maxHeight: null,
-    url: null
+  constructor(props) {
+
+    super(props);
+
+    this.state = {
+      maxWidth: props.maxWidth,
+      maxHeight: props.maxHeight,
+      url: props.url,
+    }
+
   }
 
-  constructor(props) {
-    super(props);
-    this.state.maxWidth = props.maxWidth;
-    this.state.maxHeight = props.maxHeight;
-    this.state.url = props.url;
-
-    Dimensions.addEventListener('change', ({ window: { width, height } }) => {
-      if (this.refs.myRef){
-        this.setState({maxWidth: width, maxHeight:height})
-        this._calculateImageSize();
-      }
-    });
+  // This function get call only when the props are updating
+  componentWillReceiveProps(props){
+    this.setState({
+      maxHeight: props.maxHeight,
+      maxWidth: props.maxWidth
+    }, () => {
+      this._calculateImageSize();
+    })
   }
 
   componentDidMount() {
-    if (this.refs.myRef){
-      this._calculateImageSize();
-    }
+    this._calculateImageSize();
   }
 
 
   _calculateImageSize(){
     Image.getSize(this.state.url, (width, height) => {
-      let f = (this.state.maxWidth)/width;
-      if((f*height)>this.state.maxHeight){
+      let fImage = width/height;
+      let fScreen = this.state.maxWidth/this.state.maxHeight;
+      if(fImage<fScreen){
         this.setState({
           height: this.state.maxHeight,
-          width: (this.state.maxHeight*width)/height
+          width: (this.state.maxHeight)*fImage
         })
       }else{
         this.setState({
           width: this.state.maxWidth,
-          height: (this.state.maxWidth*height)/width
-        })
+          height: (this.state.maxWidth)/fImage
+        });
       }
     });
   }
 
   render() {
-    return (
-      <Image
-        ref="myRef"
-        style={[{height: this.state.height, width: this.state.width}, styles.image]}
-        source={{uri: this.state.url}}
-      />
-    );
+    if(this.state.height!=null || this.state.width!=null){
+      return (
+        <Image
+          style={[{height: this.state.height, width: this.state.width}, styles.image]}
+          source={{uri: this.state.url}}
+        />
+      );
+    }else{
+      return null;
+    }
+
   }
 }

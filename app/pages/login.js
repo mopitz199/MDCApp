@@ -36,12 +36,19 @@ import * as http from '../utils/http';
 // Import the custom theme
 import * as theme from '../styles/theme';
 
+
+const resetActionHome = NavigationActions.reset({
+  index: 0,
+  actions: [NavigationActions.navigate({ routeName: 'home'})]
+});
+
 export default class Login extends Component {
 
 
   constructor(props){
     super(props);
     this.navigate = this.props.navigation.navigate;
+    this.currentRouteName = 'login';
     this.state = {
       visible: false,
       username: null,
@@ -52,21 +59,13 @@ export default class Login extends Component {
     };
   }
 
-  componentWillMount(){
-    this._logout();
-  }
-
-  componentDidMount() {
-    BackHandler.addEventListener('hardwareBackPress', this._handleBackPress);
-  }
-
   static navigationOptions = {
     header: null,
   };
 
-  _handleBackPress = () => {
-    return true;
-  };
+  componentWillMount(){
+    this._logout();
+  }
 
 
   _logout = () =>{
@@ -90,7 +89,7 @@ export default class Login extends Component {
         })
         .then(()=>{
           this.setState({visible: false});
-          this.props.navigation.navigate('home')
+          this.props.navigation.dispatch(resetActionHome);
         });
       })
       .catch((error) => {

@@ -15,6 +15,8 @@ import {
 // Style
 import { styles } from '../styles/splash'
 
+import { BackHandler } from 'react-native';
+
 // Npm packages
 import { NavigationActions } from 'react-navigation';
 import { StyleProvider } from 'native-base';
@@ -48,6 +50,18 @@ export default class Splash extends Component {
     }
   }
 
+  static navigationOptions = {
+    header: null,
+  };
+
+
+  componentWillMount(){
+    BackHandler.addEventListener('hardwareBackPress', function() {
+      const { dispatch, navigation, nav } = this.props;
+      return true;
+    }.bind(this));
+  }
+
   componentDidMount(){
     global.storage.load({
       key: 'token',
@@ -57,10 +71,6 @@ export default class Splash extends Component {
       this.props.navigation.dispatch(resetActionLogin);
     });
   }
-
-  static navigationOptions = {
-    header: null,
-  };
 
   render() {
     return (
