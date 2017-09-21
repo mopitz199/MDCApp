@@ -10,7 +10,8 @@ import {
   StyleSheet,
   TouchableHighlight,
   ScrollView,
-  Image
+  Image,
+  Alert
 } from 'react-native';
 
 import Dimensions from 'Dimensions';
@@ -64,21 +65,27 @@ export default class Photo extends Component {
   componentDidMount(){
     let height = Dimensions.get('window').height
     this.setState({
-      height: this.state.orientation=='landscape'?height-global.landscapeTopBarHeight:height,
+      height: this.state.orientation=='landscape'?height-global.statusBarHeight:height,
       width: Dimensions.get('window').width,
       dimensionLoaded: true,
       showOptions: true,
       visible: false,
     });
 
-    Dimensions.addEventListener('change', ({ window: { width, height } }) => {
-      this.setState({
-        orientation: width>height?'landscape':'portrait',
-        height: width>height?height-global.landscapeTopBarHeight:height,
-        width: width,
-      })
-    });
+    Dimensions.addEventListener('change', this._onChangeOrientation);
 
+  }
+
+  componentWillUnmount(){
+    Dimensions.removeEventListener('change', this._onChangeOrientation);
+  }
+
+  _onChangeOrientation = ({ window: { width, height } }) => {
+    this.setState({
+      orientation: width>height?'landscape':'portrait',
+      height: width>height?height-global.statusBarHeight:height,
+      width: width,
+    })
   }
 
   _onShowOptions = () => {
@@ -92,13 +99,27 @@ export default class Photo extends Component {
     goBack();
   }
 
+
+  _successAlert(){
+    Alert.alert(
+      'Exito',
+      'Se ha borrado el registro del trade',
+      [{text: 'Aceptar', onPress: this._onPressSuccessAlert}],
+      { cancelable: false }
+    )
+  }
+
+  _onPressSuccessAlert = () => {
+    this._onBackButton()
+  }
+
   _onDelete = () => {
     this.setState({visible:true})
     resp = http.http('DELETE', 'trades/'+this.state.params.id+"/")
     if(resp!=null){
       resp.then((response) => {
         this.setState({visible: false});
-        utils.showAlert('Exito', 'Se ha borrado el registro del trade');
+        this._successAlert()
       })
       .catch((error) => {
         this.setState({visible: false});

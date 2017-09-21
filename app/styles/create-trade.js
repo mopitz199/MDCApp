@@ -1,5 +1,6 @@
 import { StyleSheet, Platform } from 'react-native';
 import * as theme from './theme';
+import Dimensions from 'Dimensions';
 const platform = Platform.OS;
 export const styles = StyleSheet.flatten({
   container: {
@@ -99,5 +100,11 @@ export const styles = StyleSheet.flatten({
     borderRadius: 5,
     padding: 10,
     margin: 10
+  },
+
+  cameraLandscapeContainer:{
+    position: 'absolute',
+    top: 0,
+    left: 0
   }
 });

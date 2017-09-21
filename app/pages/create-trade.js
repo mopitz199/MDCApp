@@ -29,6 +29,8 @@ import getTheme from '../../native-base-theme/components';
 
 import CustomCalendarIcon from '../components/custom-calendar-icon';
 
+import Dimensions from 'Dimensions';
+
 // Import utils
 import * as utils from '../utils/utils';
 
@@ -55,7 +57,9 @@ export default class CreateTrade extends Component {
       result: "w",
       tradeType: "other",
       date: moment().format("YYYY-MM-DD"),
+      orientation: Dimensions.get('window').width>Dimensions.get('window').height?'landscape':'portrait',
       photo: null,
+
 
       visible: false,
 
@@ -83,6 +87,20 @@ export default class CreateTrade extends Component {
     headerTintColor: 'white'
   });
 
+  componentDidMount(){
+    Dimensions.addEventListener('change', this._onChangeOrientation);
+  }
+
+  componentWillUnmount(){
+    Dimensions.removeEventListener('change', this._onChangeOrientation);
+  }
+
+  _onChangeOrientation = ({ window: { width, height } }) => {
+    this.setState({
+      orientation: width>height?'landscape':'portrait'
+    })
+  }
+
   _logout = () => {
     console.warn("Logout");
     global.storage.remove({
@@ -90,7 +108,88 @@ export default class CreateTrade extends Component {
     });
   }
 
-  render() {
+  _buildTradeObject(){
+    return {
+      enter: this.state.enter,
+      stop: this.state.stop,
+      profit: this.state.profit,
+      date: this.state.date,
+      result: this.state.result,
+      tradeType: this.state.tradeType,
+      date: this.state.date,
+      photo: this.state.photo,
+      time: this.state.time,
+    }
+  }
+
+  _validateForm(){
+    let fields = [
+      ['decimal', this.state.enter, 'Enter'],
+      ['decimal', this.state.stop, 'Stop'],
+      ['decimal', this.state.profit, 'Profit'],
+      ['time', this.state.time, 'Time']
+    ];
+    v = validate(fields);
+    if(!v[0]){
+      utils.showAlert(v[2], v[1]);
+      return v[0];
+    }
+    return true
+  }
+
+  _takePicture() {
+    if(this._validateForm()){
+      this.setState({visible: true});
+      const options = {};
+      this.camera.capture({metadata: options})
+      .then((data) => {
+        let base64 = ''
+        fs.readStream(
+            data["path"],
+            'base64',
+            4095)
+        .then((ifstream) => {
+          ifstream.open()
+          ifstream.onData((chunk) => {base64 += chunk})
+          ifstream.onError((err) => {utils.showAlert('Error', err)})
+          ifstream.onEnd(() => {
+            // Aca obtengo el archivo en base64
+            let img = "data:image/png;base64,"+base64;
+            let trade = this._buildTradeObject();
+            trade['photo'] = img;
+            resp = http.http('post', 'trades/', JSON.stringify(trade));
+            if(resp!=null){
+              resp.then((response)=>{
+                this.setState({visible: false});
+                if(response["ok"]){
+                  utils.showAlert('Exito', 'Se ha guardado correctamnte');
+                }else{
+                  let error = utils.getError(response);
+                  utils.showAlert(error[0], error[1]);
+                }
+              })
+              resp.catch((error) => {
+                this.setState({visible: false});
+                utils.showAlert('Error', 'Al conectarse con el servicio');
+              });
+            }else{
+              this.setState({visible: false});
+            }
+          })
+        })
+        .catch(err => {
+          this.setState({visible: false});
+          utils.showAlert('Error', 'Al leer la foto');
+        });
+      })
+      .catch(err => {
+        this.setState({visible: false});
+        utils.showAlert('Error', 'Al sacar la foto');
+      });
+    }
+  }
+
+  _portraitRender(){
     return (
       <StyleProvider style={getTheme()}>
         <View style={styles.container}>
@@ -215,6 +314,33 @@ export default class CreateTrade extends Component {
                 <Picker.Item label="Perdida" value="l" />
               </Picker>
             </View>
+            <View style={[
+              styles.cameraContainer,
+              this.state.orientation=='landscape'?styles.cameraLandscapeContainer:null,
+              this.state.orientation=='landscape'?{
+                height: Dimensions.get('window').height-global.statusBarHeight-global.navBarHeight,
+                width: Dimensions.get('window').width
+              }:null,
+            ]}>
+              <Camera
+                ref={(cam) => {this.camera = cam;}}
+                style={styles.camera}
+                aspect={Camera.constants.Aspect.fill}>
+                <Text style={styles.capture} onPress={this._takePicture.bind(this)}>GUARDAR</Text>
+              </Camera>
+            </View>
+          </Form>
+        </View>
+      </StyleProvider>
+    );
+  }
+
+  _landscapeRender(){
+    return (
+      <StyleProvider style={getTheme()}>
+        <View style={styles.container}>
+          <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
+          <Form style={styles.form}>
             <View style={styles.cameraContainer}>
               <Camera
                 ref={(cam) => {this.camera = cam;}}
@@ -225,89 +351,15 @@ export default class CreateTrade extends Component {
             </View>
           </Form>
         </View>
-    </StyleProvider>
+      </StyleProvider>
     );
   }
 
-  _buildTradeObject(){
-    return {
-      enter: this.state.enter,
-      stop: this.state.stop,
-      profit: this.state.profit,
-      date: this.state.date,
-      result: this.state.result,
-      tradeType: this.state.tradeType,
-      date: this.state.date,
-      photo: this.state.photo,
-      time: this.state.time,
+  render() {
+    if(this.state.orientation=='portrait'){
+      return this._portraitRender();
+    }else{
+      return this._portraitRender();
     }
   }
-
-  _validateForm(){
-    let fields = [
-      ['decimal', this.state.enter, 'Enter'],
-      ['decimal', this.state.stop, 'Stop'],
-      ['decimal', this.state.profit, 'Profit'],
-      ['time', this.state.time, 'Time']
-    ];
-    v = validate(fields);
-    if(!v[0]){
-      utils.showAlert(v[2], v[1]);
-      return v[0];
-    }
-    return true
-  }
-
-  _takePicture() {
-    if(this._validateForm()){
-      this.setState({visible: true});
-      const options = {};
-      this.camera.capture({metadata: options})
-      .then((data) => {
-        let base64 = ''
-        fs.readStream(
-            data["path"],
-            'base64',
-            4095)
-        .then((ifstream) => {
-          ifstream.open()
-          ifstream.onData((chunk) => {base64 += chunk})
-          ifstream.onError((err) => {utils.showAlert('Error', err)})
-          ifstream.onEnd(() => {
-            // Aca obtengo el archivo en base64
-            let img = "data:image/png;base64,"+base64;
-            let trade = this._buildTradeObject();
-            trade['photo'] = img;
-            resp = http.http('post', 'trades/', JSON.stringify(trade));
-            if(resp!=null){
-              resp.then((response)=>{
-                this.setState({visible: false});
-                if(response["ok"]){
-                  utils.showAlert('Exito', 'Se ha guardado correctamnte');
-                }else{
-                  let error = utils.getError(response);
-                  utils.showAlert(error[0], error[1]);
-                }
-              })
-              resp.catch((error) => {
-                this.setState({visible: false});
-                utils.showAlert('Error', 'Al conectarse con el servicio');
-              });
-            }else{
-              this.setState({visible: false});
-            }
-          })
-        })
-        .catch(err => {
-          this.setState({visible: false});
-          utils.showAlert('Error', 'Al leer la foto');
-        });
-      })
-      .catch(err => {
-        this.setState({visible: false});
-        utils.showAlert('Error', 'Al sacar la foto');
-      });
-    }
-  }
-
 }
