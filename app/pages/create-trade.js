@@ -137,6 +137,24 @@ export default class CreateTrade extends Component {
     return true
   }
 
+  _onBackButton = () => {
+    const {goBack} = this.props.navigation;
+    goBack();
+  }
+  
+  _successAlert(){
+    Alert.alert(
+      'Exito',
+      'Se ha guardado correctamnte',
+      [{text: 'Aceptar', onPress: this._onPressSuccessAlert}],
+      { cancelable: false }
+    )
+  }
+
+  _onPressSuccessAlert = () => {
+    this._onBackButton()
+  }
+
   _takePicture() {
     if(this._validateForm()){
       this.setState({visible: true});
@@ -162,7 +180,7 @@ export default class CreateTrade extends Component {
               resp.then((response)=>{
                 this.setState({visible: false});
                 if(response["ok"]){
-                  utils.showAlert('Exito', 'Se ha guardado correctamnte');
+                  this._successAlert()
                 }else{
                   let error = utils.getError(response);
                   utils.showAlert(error[0], error[1]);
