@@ -192,28 +192,29 @@ export default class Photo extends Component {
         <View
           style={{
             flex: 1,
-            /*borderColor: 'red',
-            borderWidth: 1,*/
             backgroundColor: 'black',
-            justifyContent: 'center',
           }}
           >
-          <TouchableHighlight
-            style={{
+          <ImageZoom
+            cropWidth={this.state.width}
+            cropHeight={this.state.height}
+            imageWidth={this.state.width}
+            imageHeight={this.state.height}
+            onClick={this._onShowOptions}
+            onLongPress={this._onShowOptions}
+            longPressTime={101}
+          >
+            <View style={{
               flex: 1,
-              backgroundColor: 'black',
               justifyContent: 'center',
-            }}
-            onPress={this._onShowOptions}
-            >
-            <View>
+            }}>
               <CustomImage
                 url = {this.state.params.url}
                 maxWidth = {this.state.width}
                 maxHeight = {this.state.height}
               />
             </View>
-          </TouchableHighlight>
+          </ImageZoom>
           {this.state.showOptions?this._options():null}
         </View>
       )
