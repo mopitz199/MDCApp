@@ -16,6 +16,8 @@ import {
 
 import Dimensions from 'Dimensions';
 
+import { DeviceEventEmitter } from 'react-native';
+
 // Style
 import { styles } from '../styles/photo';
 
@@ -59,8 +61,11 @@ export default class Photo extends Component {
       orientation: Dimensions.get('window').width>Dimensions.get('window').height?'landscape':'portrait',
       params: props.navigation.state.params,
       dimensionLoaded: false,
+      showRemoveIcon: false,
     }
+    this._loadCurrentUser();
   }
+
 
   componentDidMount(){
     let height = Dimensions.get('window').height
@@ -78,6 +83,19 @@ export default class Photo extends Component {
 
   componentWillUnmount(){
     Dimensions.removeEventListener('change', this._onChangeOrientation);
+  }
+
+
+  _loadCurrentUser(){
+    global.storage.load({
+      key: 'user',
+    }).then(ret => {
+      if(ret.id==this.state.params.userId){
+        this.setState({showRemoveIcon: true})
+      }
+    }).catch(err => {
+      utils.showAlert(err.name, err.message);
+    })
   }
 
   _onChangeOrientation = ({ window: { width, height } }) => {
@@ -111,6 +129,7 @@ export default class Photo extends Component {
 
   _onPressSuccessAlert = () => {
     this._onBackButton()
+    DeviceEventEmitter.emit('tradeDeleted',  {})
   }
 
   _onDelete = () => {
@@ -128,6 +147,30 @@ export default class Photo extends Component {
     }else{
       this.setState({visible: false});
       utils.showAlert('Error', 'Al conectarse con el servicio');
+    }
+  }
+
+  _showRemoveIcon(){
+    if(this.state.showRemoveIcon){
+      return(
+        <TouchableHighlight
+          onPress={this._onDelete}
+          style={{
+            paddingTop: 15,
+            paddingBottom: 15,
+            paddingRight: 15,
+            paddingLeft: 15
+          }}
+          >
+          <FontAwesome
+            name="trash"
+            size={25}
+            color={theme.secondaryTextColor}
+          />
+        </TouchableHighlight>
+      )
+    }else{
+      return null;
     }
   }
 
@@ -165,21 +208,7 @@ export default class Photo extends Component {
                   color={theme.secondaryTextColor}
                 />
               </TouchableHighlight>
-              <TouchableHighlight
-                onPress={this._onDelete}
-                style={{
-                  paddingTop: 15,
-                  paddingBottom: 15,
-                  paddingRight: 15,
-                  paddingLeft: 15
-                }}
-                >
-                <FontAwesome
-                  name="trash"
-                  size={25}
-                  color={theme.secondaryTextColor}
-                />
-              </TouchableHighlight>
+              {this.state.showRemoveIcon?this._showRemoveIcon():null}
             </View>
         </View>
       </StyleProvider>

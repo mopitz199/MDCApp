@@ -21,7 +21,7 @@ import { homeTabStyles } from '../styles/home-tab';
 import { StackNavigator,  TabNavigator} from 'react-navigation';
 import Statistics from '../pages/statistics';
 import MyTrades from '../pages/my-trades';
-import OtherTrades from '../pages/other-trades';
+import OtherUsers from '../pages/other-users';
 import HomeRightHeader from '../components/home-right-header';
 
 
@@ -33,7 +33,7 @@ export const HomeTab = TabNavigator({
     screen: Statistics,
   },
   brotherTrades: {
-    screen: OtherTrades,
+    screen: OtherUsers,
   },
 }, {
   tabBarOptions: {

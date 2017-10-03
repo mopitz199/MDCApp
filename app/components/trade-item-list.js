@@ -10,6 +10,7 @@ import {
   StyleSheet,
   Image,
   TouchableHighlight,
+  TouchableOpacity,
 } from 'react-native';
 
 // Style
@@ -35,15 +36,16 @@ export default class TradeItemList extends Component {
 
   _calculateResult = () => {
     if(this.state.data.result=='w'){
-      return Math.abs((parseFloat(this.state.data.profit)-parseFloat(this.state.data.enter)))
+      return this.state.data.profit
     }else{
-      return Math.abs((parseFloat(this.state.data.stop)-parseFloat(this.state.data.enter)))
+      return this.state.data.stop
     }
   }
 
 
   _onPressButton = () => {
     this.state.navigate('photo', {
+      userId: this.state.data.user,
       url: this.state.data.photo,
       id: this.state.data.id
     });
@@ -61,7 +63,7 @@ export default class TradeItemList extends Component {
 
   render() {
     return (
-      <TouchableHighlight onPress={this._onPressButton}>
+      <TouchableOpacity onPress={this._onPressButton}>
         <View style={styles.tradeItemList}>
           <Image
             style={styles.tradeItemListLeft}
@@ -73,15 +75,6 @@ export default class TradeItemList extends Component {
               <Text style={styles.time}>{this.state.data.time}</Text>
             </View>
             <View style={styles.tradeItemListBottomInfo}>
-              <View style={styles.winLose}>
-                <Icon
-                  style={styles.winLoseIcon}
-                  name={this._getTradeDirection()=='bull'?'arrow-up':'arrow-down'}
-                  size={20}
-                  color={theme.primaryLightColor}
-                />
-                <Text style={styles.winLoseText}>{this._getTradeDirection()=='bull'?'Largo':'Corto'}</Text>
-              </View>
               <Text style={styles.tradeType}>Tipo: {this.state.data.tradeType}</Text>
             </View>
           </View>
@@ -89,7 +82,7 @@ export default class TradeItemList extends Component {
             <Text style={[styles.result, this.state.data.result=='w'?styles.winResult:styles.loseResult]} >{this._calculateResult()}</Text>
           </View>
         </View>
-      </TouchableHighlight>
+      </TouchableOpacity>
     );
   }
 

@@ -10,13 +10,10 @@ import {
   StyleSheet,
   TouchableHighlight,
   FlatList,
-  Platform
 } from 'react-native';
 
-import {DeviceEventEmitter} from 'react-native';
-
 // Style
-import { styles } from '../styles/my-trades';
+import { styles } from '../styles/other-users';
 
 // Npm packages
 import { StyleProvider } from 'native-base';
@@ -36,39 +33,29 @@ import * as http from '../utils/http';
 import * as theme from '../styles/theme';
 
 // Components
-import TradeItemList from '../components/trade-item-list';
+import UserItemList from '../components/user-item-list';
 
 import CustomActionButton from '../components/action-button';
 
-export default class MyTrades extends Component {
+export default class OtherUsers extends Component {
 
   constructor(props){
     super(props);
-    this.currentRouteName = 'my-trades';
     this.state = {
       visible: false,
       readyToRender: false,
       refreshing: false,
-      platform: Platform.OS
     }
   }
 
-  componentWillMount() {
-    DeviceEventEmitter.addListener('tradeCreated', (e)=>{
-      this._loadTrades();
-    })
-    DeviceEventEmitter.addListener('tradeDeleted', (e)=>{
-      this._loadTrades();
-    })
-  }
 
-  componentDidMount(){
+  componentWillMount(){
     this._loadTrades();
   }
 
 
   static navigationOptions = ({ navigation }) => ({
-    tabBarLabel: 'My Trades'
+    tabBarLabel: 'Others'
   });
 
 
@@ -77,7 +64,7 @@ export default class MyTrades extends Component {
     global.storage.load({
       key: 'user',
     }).then(ret => {
-      resp = http.http('GET', 'trades/?user='+ret.id)
+      resp = http.http('GET', 'users/getOtherUsers/')
       if(resp!=null){
         resp.then((response) => response.json())
         .then((responseJson)=>{
@@ -91,7 +78,7 @@ export default class MyTrades extends Component {
         this.setState({visible: false, refreshing: false});
         utils.showAlert('Error', 'Al conectarse con el servicio');
       }
-    })
+    });
   }
 
 
@@ -109,21 +96,24 @@ export default class MyTrades extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    return (
-      <StyleProvider style={getTheme()}>
-        <View style={styles.container}>
-          <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
-          <FlatList
-            data = {this.state.data}
-            keyExtractor={this._keyExtractor}
-            renderItem={({item}) => <TradeItemList data={[item, navigate]} />}
-            refreshing = {this.state.refreshing}
-            onRefresh = {this._handleRefresh}
-          />
-          {this.state.platform!='ios'?<CustomActionButton navigate={navigate} />:null}
-        </View>
-      </StyleProvider>
-    );
+    if(this.state.readyToRender){
+      return (
+        <StyleProvider style={getTheme()}>
+          <View style={styles.container}>
+            <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
+            <FlatList
+              data = {this.state.data}
+              keyExtractor={this._keyExtractor}
+              renderItem={({item}) => <UserItemList data={[item, navigate]} />}
+              refreshing = {this.state.refreshing}
+              onRefresh = {this._handleRefresh}
+            />
+          </View>
+        </StyleProvider>
+      );
+    }else{
+      return null;
+    }
   }
 
 }

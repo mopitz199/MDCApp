@@ -14,6 +14,8 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
+import { DeviceEventEmitter } from 'react-native';
+
 // Style
 import { styles } from '../styles/create-trade'
 
@@ -101,12 +103,6 @@ export default class CreateTrade extends Component {
     })
   }
 
-  _logout = () => {
-    console.warn("Logout");
-    global.storage.remove({
-    	key: 'token'
-    });
-  }
 
   _buildTradeObject(){
     return {
@@ -141,7 +137,7 @@ export default class CreateTrade extends Component {
     const {goBack} = this.props.navigation;
     goBack();
   }
-  
+
   _successAlert(){
     Alert.alert(
       'Exito',
@@ -153,6 +149,7 @@ export default class CreateTrade extends Component {
 
   _onPressSuccessAlert = () => {
     this._onBackButton()
+    DeviceEventEmitter.emit('tradeCreated',  {})
   }
 
   _takePicture() {

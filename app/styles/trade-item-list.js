@@ -38,20 +38,6 @@ export const styles = StyleSheet.flatten({
     flexDirection: 'row',
     alignItems: 'center',
   },
-  winLose:{
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginRight: 10,
-    paddingRight: 10,
-    borderRightWidth: 1,
-    borderRightColor: theme.borderColor,
-  },
-  winLoseIcon:{
-    marginRight: 5
-  },
-  winLoseText:{
-    fontSize: 18,
-  },
   tradeType:{
     fontSize: 18,
     fontWeight: 'bold'

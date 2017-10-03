@@ -5,7 +5,10 @@ export default styles = StyleSheet.flatten({
   rightContainer:{
     flexDirection: 'row'
   },
-  logoutIcon:{
-    marginRight: 10,
+  settingIcon:{
+    marginRight: 15,
+  },
+  plusIcon:{
+    marginRight: 15,
   }
 });

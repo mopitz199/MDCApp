@@ -12,6 +12,8 @@ import {
   FlatList,
 } from 'react-native';
 
+import {DeviceEventEmitter} from 'react-native';
+
 // Style
 import { styles } from '../styles/other-trades';
 
@@ -35,7 +37,6 @@ import * as theme from '../styles/theme';
 // Components
 import TradeItemList from '../components/trade-item-list';
 
-import CustomActionButton from '../components/action-button';
 
 export default class OtherTrades extends Component {
 
@@ -45,40 +46,46 @@ export default class OtherTrades extends Component {
       visible: false,
       readyToRender: false,
       refreshing: false,
+      params: props.navigation.state.params,
     }
   }
 
+  static navigationOptions = ({ navigation }) => ({
+    headerStyle:{ backgroundColor: theme.primaryNormalColor},
+    headerTintColor: 'white',
+    title: navigation.state.params.username
+  });
 
-  componentWillMount(){
+  componentWillMount() {
+    DeviceEventEmitter.addListener('tradeCreated', (e)=>{
+      this._loadTrades();
+    })
+    DeviceEventEmitter.addListener('tradeDeleted', (e)=>{
+      this._loadTrades();
+    })
+  }
+
+  componentDidMount(){
     this._loadTrades();
   }
 
 
-  static navigationOptions = ({ navigation }) => ({
-    tabBarLabel: 'Brother'
-  });
-
-
   _loadTrades = () => {
     this.setState({visible: true});
-    global.storage.load({
-      key: 'user',
-    }).then(ret => {
-      resp = http.http('GET', 'trades/?user=2')
-      if(resp!=null){
-        resp.then((response) => response.json())
-        .then((responseJson)=>{
-          this.setState({visible: false, data: responseJson, readyToRender: true, refreshing: false});
-        })
-        .catch((error) => {
-          this.setState({visible: false, refreshing: false});
-          utils.showAlert('Error', 'Al conectarse con el servicio');
-        });
-      }else{
+    resp = http.http('GET', 'trades/?user='+this.state.params.id)
+    if(resp!=null){
+      resp.then((response) => response.json())
+      .then((responseJson)=>{
+        this.setState({visible: false, data: responseJson, readyToRender: true, refreshing: false});
+      })
+      .catch((error) => {
         this.setState({visible: false, refreshing: false});
         utils.showAlert('Error', 'Al conectarse con el servicio');
-      }
-    });
+      });
+    }else{
+      this.setState({visible: false, refreshing: false});
+      utils.showAlert('Error', 'Al conectarse con el servicio');
+    }
   }
 
 
@@ -96,24 +103,20 @@ export default class OtherTrades extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    if(this.state.readyToRender){
-      return (
-        <StyleProvider style={getTheme()}>
-          <View style={styles.container}>
-            <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
-            <FlatList
-              data = {this.state.data}
-              keyExtractor={this._keyExtractor}
-              renderItem={({item}) => <TradeItemList data={[item, navigate]} />}
-              refreshing = {this.state.refreshing}
-              onRefresh = {this._handleRefresh}
-            />
-          </View>
-        </StyleProvider>
-      );
-    }else{
-      return null;
-    }
+    return (
+      <StyleProvider style={getTheme()}>
+        <View style={styles.container}>
+          <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
+          <FlatList
+            data = {this.state.data}
+            keyExtractor={this._keyExtractor}
+            renderItem={({item}) => <TradeItemList data={[item, navigate]} />}
+            refreshing = {this.state.refreshing}
+            onRefresh = {this._handleRefresh}
+          />
+        </View>
+      </StyleProvider>
+    );
   }
 
 }

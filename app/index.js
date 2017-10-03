@@ -15,12 +15,14 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 // Import the custom theme
 import * as theme from './styles/theme';
 
+import { Root } from "native-base";
 
 import { StackNavigator,  TabNavigator} from 'react-navigation';
 import Login from './pages/login';
 import Splash from './pages/splash';
 import CreateTrade from './pages/create-trade';
 import Photo from './pages/photo';
+import OtherTrades from './pages/other-trades';
 
 import './utils/global';
 
@@ -32,5 +34,15 @@ const SimpleApp = StackNavigator({
   home: { screen: HomeTab },
   createTrade: { screen: CreateTrade },
   photo: { screen: Photo },
+  otherTrades: { screen: OtherTrades },
 });
-AppRegistry.registerComponent('MDC', () => SimpleApp);
+
+const app = () => {
+  return (
+    <Root>
+      <SimpleApp />
+    </Root>
+  )
+}
+
+AppRegistry.registerComponent('MDC', () => app);
