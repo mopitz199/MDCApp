@@ -90,7 +90,7 @@ export default class Photo extends Component {
     global.storage.load({
       key: 'user',
     }).then(ret => {
-      if(ret.id==this.state.params.userId){
+      if(ret.id==this.state.params.trade.user){
         this.setState({showRemoveIcon: true})
       }
     }).catch(err => {
@@ -134,7 +134,7 @@ export default class Photo extends Component {
 
   _onDelete = () => {
     this.setState({visible:true})
-    resp = http.http('DELETE', 'trades/'+this.state.params.id+"/")
+    resp = http.http('DELETE', 'trades/'+this.state.params.trade.id+"/")
     if(resp!=null){
       resp.then((response) => {
         this.setState({visible: false});
@@ -174,7 +174,7 @@ export default class Photo extends Component {
     }
   }
 
-  _options(){
+  _optionsTop(){
     return (
       <StyleProvider style={getTheme()}>
         <View
@@ -215,6 +215,47 @@ export default class Photo extends Component {
     )
   }
 
+
+  _optionsBottom(){
+    return (
+      <StyleProvider style={getTheme()}>
+        <View
+          style={{
+            width: this.state.width,
+            backgroundColor: 'rgba(0, 0, 0, 0.64)',
+            position: 'absolute',
+            bottom: 0
+          }}
+          >
+            <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
+            <View
+              style={{
+                flexDirection: this.state.orientation=='landscape'?'row':'column',
+                justifyContent: 'space-between',
+                padding: 10,
+              }}
+              >
+              <View style={styles.bottomContainerText}>
+                <FontAwesome style={styles.bottomIcons} name="arrow-circle-right" size={17} color={theme.secondaryTextColor}/>
+                <Text style={styles.bottomTitleText}>ENTRY:</Text>
+                <Text style={styles.bottomTextValue}>{this.state.params.trade.enter}</Text>
+              </View>
+              <View style={styles.bottomContainerText}>
+                <FontAwesome style={styles.bottomIcons} name="arrow-circle-up" size={17} color='green'/>
+                <Text style={styles.bottomTitleText}>PROFIT:</Text>
+                <Text style={styles.bottomTextValue}>{this.state.params.trade.profit}</Text>
+              </View>
+              <View style={styles.bottomContainerText}>
+                <FontAwesome style={styles.bottomIcons} name="arrow-circle-down" size={17} color='red'/>
+                <Text style={styles.bottomTitleText}>STOP:</Text>
+                <Text style={styles.bottomTextValue}>{this.state.params.trade.stop}</Text>
+              </View>
+            </View>
+        </View>
+      </StyleProvider>
+    )
+  }
+
   render() {
     if(this.state.dimensionLoaded){
       return (
@@ -238,13 +279,14 @@ export default class Photo extends Component {
               justifyContent: 'center',
             }}>
               <CustomImage
-                url = {this.state.params.url}
+                url = {this.state.params.trade.photo}
                 maxWidth = {this.state.width}
                 maxHeight = {this.state.height}
               />
             </View>
           </ImageZoom>
-          {this.state.showOptions?this._options():null}
+          {this.state.showOptions?this._optionsTop():null}
+          {this.state.showOptions?this._optionsBottom():null}
         </View>
       )
     }else{

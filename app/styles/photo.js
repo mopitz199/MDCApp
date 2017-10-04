@@ -7,4 +7,23 @@ export const styles = StyleSheet.flatten({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  bottomContainerText:{
+    flexDirection: 'row',
+    marginBottom: 8,
+    alignItems: 'center',
+  },
+  bottomTitleText:{
+    fontSize: 17,
+    fontWeight: '700',
+    color:'white',
+    marginRight: 7,
+  },
+  bottomTextValue:{
+    fontSize: 17,
+    fontWeight: 'normal',
+    color:'white',
+  },
+  bottomIcons:{
+    marginRight: 7,
+  }
 });
