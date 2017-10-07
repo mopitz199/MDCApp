@@ -56,6 +56,7 @@ export default class CreateTrade extends Component {
     const { navigate } = this.props.navigation;
     this.state = {
 
+      didMount: false,
       result: "w",
       tradeType: "other",
       date: moment().format("YYYY-MM-DD"),
@@ -63,7 +64,7 @@ export default class CreateTrade extends Component {
       photo: null,
 
 
-      visible: false,
+      visible: true,
 
       enter: null,
       enterError: false,
@@ -90,12 +91,16 @@ export default class CreateTrade extends Component {
   });
 
   componentDidMount(){
+    setTimeout(() => this.setState({didMount: true}, () => {
+      this.setState({visible:false})
+    }), 1)
     Dimensions.addEventListener('change', this._onChangeOrientation);
   }
 
   componentWillUnmount(){
     Dimensions.removeEventListener('change', this._onChangeOrientation);
   }
+
 
   _onChangeOrientation = ({ window: { width, height } }) => {
     this.setState({
@@ -118,6 +123,7 @@ export default class CreateTrade extends Component {
     }
   }
 
+
   _validateForm(){
     let fields = [
       ['decimal', this.state.enter, 'Enter'],
@@ -133,10 +139,12 @@ export default class CreateTrade extends Component {
     return true
   }
 
+
   _onBackButton = () => {
     const {goBack} = this.props.navigation;
     goBack();
   }
+
 
   _successAlert(){
     Alert.alert(
@@ -147,10 +155,12 @@ export default class CreateTrade extends Component {
     )
   }
 
+
   _onPressSuccessAlert = () => {
     this._onBackButton()
     DeviceEventEmitter.emit('tradeCreated',  {})
   }
+
 
   _takePicture() {
     if(this._validateForm()){
@@ -204,151 +214,160 @@ export default class CreateTrade extends Component {
     }
   }
 
+
+  _portraitFormRender(){
+    return (
+      <Form style={styles.form}>
+        <View style={styles.enterContainer}>
+          <Item floatingLabel error={this.state.enterError} style={[styles.inputItem, this.state.enterError?styles.inputItemError:null]}>
+            <Label style={styles.input}>
+              Enter
+              <Text style={theme.inputRequired.enabled}> *</Text>
+            </Label>
+            <Input
+              keyboardType={'numeric'}
+              autoCorrect={false}
+              onChangeText={(enter) => {
+                this.setState({enter: enter});
+                let v = validate([['decimal', enter]]);
+                this.setState({enterError: !v[0], enterErrorMessage: v[1]})
+              }}
+            />
+          </Item>
+          <Text style={styles.errorMessage}>{this.state.enterErrorMessage}</Text>
+        </View>
+        <View style={styles.stopProfitContainer}>
+          <View style={styles.stopContainer}>
+            <Item floatingLabel error={this.state.stopError} style={[styles.inputItem, this.state.stopError?styles.inputItemError:null]}>
+              <Label style={styles.input}>
+                Stop
+                <Text style={theme.inputRequired.enabled}> *</Text>
+              </Label>
+              <Input
+                keyboardType={'numeric'}
+                autoCorrect={false}
+                onChangeText={(stop) => {
+                  this.setState({stop: stop})
+                  let v = validate([['decimal', stop]]);
+                  this.setState({stopError: !v[0], stopErrorMessage: v[1]})
+                }}
+              />
+            </Item>
+            <Text style={styles.errorMessage}>{this.state.stopErrorMessage}</Text>
+          </View>
+          <View style={styles.profitContainer}>
+            <Item floatingLabel error={this.state.profitError} style={[styles.inputItem, this.state.profitError?styles.inputItemError:null]}>
+              <Label style={styles.input}>
+                Profit
+                <Text style={theme.inputRequired.enabled}> *</Text>
+              </Label>
+              <Input
+                keyboardType={'numeric'}
+                autoCorrect={false}
+                onChangeText={(profit) => {
+                  this.setState({profit: profit})
+                  let v = validate([['decimal', profit]]);
+                  this.setState({profitError: !v[0], profitErrorMessage: v[1]})
+                }}
+              />
+            </Item>
+            <Text style={styles.errorMessage}>{this.state.profitErrorMessage}</Text>
+          </View>
+        </View>
+        <View style={styles.datetimeContainer}>
+          <DatePicker
+            style={styles.datepickerItem}
+            date={this.state.date}
+            mode="date"
+            format="YYYY-MM-DD"
+            iconComponent= {<CustomCalendarIcon />}
+            confirmBtnText="Confirm"
+            cancelBtnText="Cancel"
+            customStyles={{
+              dateInput: {
+                marginLeft: -20,
+                borderWidth: 0,
+              },
+              dateText:{
+                color: theme.primaryTextColor,
+              }
+            }}
+            onDateChange={(date) => this.setState({date: date}) }
+          />
+          <View style={styles.timeContainer}>
+            <Item floatingLabel error={this.state.timeError} style={[styles.inputItem, this.state.timeError?styles.inputItemError:null]}>
+              <Label style={styles.input}>
+                Hora(HH:MM:SS)
+                <Text style={theme.inputRequired.enabled}> *</Text>
+              </Label>
+              <Input
+                autoCorrect={false}
+                value={this.time}
+                onChangeText={(time) => {
+                  this.setState({time: time})
+                  let v = validate([['time', time]]);
+                  this.setState({timeError: !v[0], timeErrorMessage: v[1]})
+                }}
+              />
+            </Item>
+            <Text style={styles.errorMessage}>{this.state.timeErrorMessage}</Text>
+          </View>
+        </View>
+        <View style={styles.selectContainer}>
+          <Picker
+            style={styles.tradeTypeSelect}
+            selectedValue={this.state.tradeType}
+            onValueChange={(itemValue, itemIndex) => this.setState({tradeType: itemValue}) }
+            >
+            <Picker.Item label="A1" value="a1" />
+            <Picker.Item label="A2" value="a2" />
+            <Picker.Item label="A3" value="a3" />
+            <Picker.Item label="20" value="20" />
+            <Picker.Item label="80" value="80" />
+            <Picker.Item label="CBOT" value="cbot" />
+            <Picker.Item label="XOVER" value="xover" />
+            <Picker.Item label="Otra" value="other" />
+          </Picker>
+          <Picker
+            style={styles.resultSelect}
+            selectedValue={this.state.result}
+            onValueChange={(itemValue, itemIndex) => this.setState({result: itemValue})}
+            >
+            <Picker.Item label="Ganada" value="w" />
+            <Picker.Item label="Perdida" value="l" />
+          </Picker>
+        </View>
+        <View style={[
+          styles.cameraContainer,
+          this.state.orientation=='landscape'?styles.cameraLandscapeContainer:null,
+          this.state.orientation=='landscape'?{
+            height: Dimensions.get('window').height-global.statusBarHeight-global.navBarHeight,
+            width: Dimensions.get('window').width
+          }:null,
+        ]}>
+          <Camera
+            ref={(cam) => {this.camera = cam;}}
+            style={styles.camera}
+            aspect={Camera.constants.Aspect.fill}>
+            <Text style={styles.capture} onPress={this._takePicture.bind(this)}>GUARDAR</Text>
+          </Camera>
+        </View>
+      </Form>
+    )
+  }
+
+
   _portraitRender(){
     return (
       <StyleProvider style={getTheme()}>
         <View style={styles.container}>
           <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
-          <Form style={styles.form}>
-            <View style={styles.enterContainer}>
-              <Item floatingLabel error={this.state.enterError} style={[styles.inputItem, this.state.enterError?styles.inputItemError:null]}>
-                <Label style={styles.input}>
-                  Enter
-                  <Text style={theme.inputRequired.enabled}> *</Text>
-                </Label>
-                <Input
-                  keyboardType={'numeric'}
-                  autoCorrect={false}
-                  onChangeText={(enter) => {
-                    this.setState({enter: enter});
-                    let v = validate([['decimal', enter]]);
-                    this.setState({enterError: !v[0], enterErrorMessage: v[1]})
-                  }}
-                />
-              </Item>
-              <Text style={styles.errorMessage}>{this.state.enterErrorMessage}</Text>
-            </View>
-            <View style={styles.stopProfitContainer}>
-              <View style={styles.stopContainer}>
-                <Item floatingLabel error={this.state.stopError} style={[styles.inputItem, this.state.stopError?styles.inputItemError:null]}>
-                  <Label style={styles.input}>
-                    Stop
-                    <Text style={theme.inputRequired.enabled}> *</Text>
-                  </Label>
-                  <Input
-                    keyboardType={'numeric'}
-                    autoCorrect={false}
-                    onChangeText={(stop) => {
-                      this.setState({stop: stop})
-                      let v = validate([['decimal', stop]]);
-                      this.setState({stopError: !v[0], stopErrorMessage: v[1]})
-                    }}
-                  />
-                </Item>
-                <Text style={styles.errorMessage}>{this.state.stopErrorMessage}</Text>
-              </View>
-              <View style={styles.profitContainer}>
-                <Item floatingLabel error={this.state.profitError} style={[styles.inputItem, this.state.profitError?styles.inputItemError:null]}>
-                  <Label style={styles.input}>
-                    Profit
-                    <Text style={theme.inputRequired.enabled}> *</Text>
-                  </Label>
-                  <Input
-                    keyboardType={'numeric'}
-                    autoCorrect={false}
-                    onChangeText={(profit) => {
-                      this.setState({profit: profit})
-                      let v = validate([['decimal', profit]]);
-                      this.setState({profitError: !v[0], profitErrorMessage: v[1]})
-                    }}
-                  />
-                </Item>
-                <Text style={styles.errorMessage}>{this.state.profitErrorMessage}</Text>
-              </View>
-            </View>
-            <View style={styles.datetimeContainer}>
-              <DatePicker
-                style={styles.datepickerItem}
-                date={this.state.date}
-                mode="date"
-                format="YYYY-MM-DD"
-                iconComponent= {<CustomCalendarIcon />}
-                confirmBtnText="Confirm"
-                cancelBtnText="Cancel"
-                customStyles={{
-                  dateInput: {
-                    marginLeft: -20,
-                    borderWidth: 0,
-                  },
-                  dateText:{
-                    color: theme.primaryTextColor,
-                  }
-                }}
-                onDateChange={(date) => this.setState({date: date}) }
-              />
-              <View style={styles.timeContainer}>
-                <Item floatingLabel error={this.state.timeError} style={[styles.inputItem, this.state.timeError?styles.inputItemError:null]}>
-                  <Label style={styles.input}>
-                    Hora(HH:MM:SS)
-                    <Text style={theme.inputRequired.enabled}> *</Text>
-                  </Label>
-                  <Input
-                    autoCorrect={false}
-                    value={this.time}
-                    onChangeText={(time) => {
-                      this.setState({time: time})
-                      let v = validate([['time', time]]);
-                      this.setState({timeError: !v[0], timeErrorMessage: v[1]})
-                    }}
-                  />
-                </Item>
-                <Text style={styles.errorMessage}>{this.state.timeErrorMessage}</Text>
-              </View>
-            </View>
-            <View style={styles.selectContainer}>
-              <Picker
-                style={styles.tradeTypeSelect}
-                selectedValue={this.state.tradeType}
-                onValueChange={(itemValue, itemIndex) => this.setState({tradeType: itemValue}) }
-                >
-                <Picker.Item label="A1" value="a1" />
-                <Picker.Item label="A2" value="a2" />
-                <Picker.Item label="A3" value="a3" />
-                <Picker.Item label="20" value="20" />
-                <Picker.Item label="80" value="80" />
-                <Picker.Item label="CBOT" value="cbot" />
-                <Picker.Item label="XOVER" value="xover" />
-                <Picker.Item label="Otra" value="other" />
-              </Picker>
-              <Picker
-                style={styles.resultSelect}
-                selectedValue={this.state.result}
-                onValueChange={(itemValue, itemIndex) => this.setState({result: itemValue})}
-                >
-                <Picker.Item label="Ganada" value="w" />
-                <Picker.Item label="Perdida" value="l" />
-              </Picker>
-            </View>
-            <View style={[
-              styles.cameraContainer,
-              this.state.orientation=='landscape'?styles.cameraLandscapeContainer:null,
-              this.state.orientation=='landscape'?{
-                height: Dimensions.get('window').height-global.statusBarHeight-global.navBarHeight,
-                width: Dimensions.get('window').width
-              }:null,
-            ]}>
-              <Camera
-                ref={(cam) => {this.camera = cam;}}
-                style={styles.camera}
-                aspect={Camera.constants.Aspect.fill}>
-                <Text style={styles.capture} onPress={this._takePicture.bind(this)}>GUARDAR</Text>
-              </Camera>
-            </View>
-          </Form>
+          {this.state.didMount?this._portraitFormRender():null}
         </View>
       </StyleProvider>
     );
   }
+
 
   _landscapeRender(){
     return (
@@ -369,6 +388,7 @@ export default class CreateTrade extends Component {
       </StyleProvider>
     );
   }
+
 
   render() {
     if(this.state.orientation=='portrait'){
