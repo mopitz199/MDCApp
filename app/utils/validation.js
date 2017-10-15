@@ -1,4 +1,9 @@
 export const validation = {
+  username:{
+    presence: {
+      message: 'Please enter an username'
+    }
+  },
   email: {
     presence: {
       message: 'Please enter an email address'

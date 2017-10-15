@@ -23,6 +23,7 @@ import Splash from './pages/splash';
 import CreateTrade from './pages/create-trade';
 import Photo from './pages/photo';
 import OtherTrades from './pages/other-trades';
+import Profile from './pages/profile';
 
 import './utils/global';
 
@@ -35,6 +36,7 @@ const SimpleApp = StackNavigator({
   createTrade: { screen: CreateTrade },
   photo: { screen: Photo },
   otherTrades: { screen: OtherTrades },
+  profile: { screen: Profile },
 });
 
 const app = () => {

@@ -30,7 +30,7 @@ const resetActionLogin = NavigationActions.reset({
   actions: [NavigationActions.navigate({ routeName: 'login'})]
 });
 
-var BUTTONS = ["Logout",];
+var BUTTONS = ["Logout", "Profile"];
 var DESTRUCTIVE_INDEX = 3;
 var CANCEL_INDEX = 4;
 
@@ -47,7 +47,9 @@ export default class HomeRightHeader extends Component {
     this.props.navigation.dispatch(resetActionLogin);
   }
 
+
   _showActions = () => {
+    const { navigate } = this.props.navigation;
     ActionSheet.show(
       {
         options: BUTTONS,
@@ -59,7 +61,11 @@ export default class HomeRightHeader extends Component {
         if(BUTTONS[buttonIndex]=='Logout'){
           this._onLogout()
         }
-        //this.setState({ clicked: BUTTONS[buttonIndex] });
+        else if(BUTTONS[buttonIndex]=='Profile'){
+          navigate('profile')
+        }else{
+
+        }
       }
     )
   }
