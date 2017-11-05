@@ -6,6 +6,7 @@ export const styles = StyleSheet.flatten({
     flex: 1,
     paddingTop: 50,
     justifyContent: 'flex-end',
+    alignItems: 'center',
     backgroundColor: theme.primaryNormalColor
   },
   logo:{
@@ -32,12 +33,17 @@ export const styles = StyleSheet.flatten({
     color: theme.secondaryTextColor,
   },
   loginButton:{
-    marginBottom: 30,
+    marginBottom: 10,
     backgroundColor: 'white',
   },
   loginText:{
     fontSize: 18,
     color: theme.primaryNormalColor,
     fontWeight: '400',
+  },
+  recoverPassword:{
+    color: theme.secondaryTextColor,
+    fontSize: 16,
+    marginBottom: 10,
   }
 });

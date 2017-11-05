@@ -81,27 +81,23 @@ export default class Statistics extends Component {
   _loadStatistics = () =>{
     let params = '?from='+this.state.fromDate+'&to='+this.state.toDate;
     this.setState({visible: true});
-    resp = http.http('GET', 'trades/getStatistics/'+params);
-    if(resp!=null){
-      resp.then((response) => response.json())
-      .then((responseJson)=>{
-        let won = responseJson['won']
-        let lost = -1*responseJson['lost']
-        this.setState({
-          visible: false,
-          dataLoaded: true,
-          won: won,
-          lost: lost,
-          hasData: (won>0 && lost>0)
-        });
-      })
-      resp.catch((error) => {
-        this.setState({visible: false});
-        utils.showAlert('Error', 'Al conectarse con el servicio');
+    http.http('GET', 'trades/getStatistics/'+params)
+    .then((response) => response.json())
+    .then((responseJson)=>{
+      let won = responseJson['won']
+      let lost = -1*responseJson['lost']
+      this.setState({
+        visible: false,
+        dataLoaded: true,
+        won: won,
+        lost: lost,
+        hasData: (won>0 && lost>0)
       });
-    }else{
+    })
+    .catch((error) => {
       this.setState({visible: false});
-    }
+      utils.showAlert('Error', 'Al conectarse con el servicio');
+    });
   }
 
   _onPressButton = () => {

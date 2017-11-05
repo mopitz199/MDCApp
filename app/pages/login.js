@@ -10,7 +10,8 @@ import {
   TextInput,
   StyleSheet,
   Image,
-  TouchableHighlight
+  TouchableHighlight,
+  TouchableOpacity
 } from 'react-native';
 
 import { BackHandler } from 'react-native';
@@ -78,29 +79,25 @@ export default class Login extends Component {
   }
 
   _getCurrentUser(){
-    resp = http.http('GET', 'users/getCurrentUser/')
-    if(resp!=null){
-      resp.then((response) => response.json())
-      .then((responseJson)=>{
-        global.storage.save({
-          key: 'user',
-          data: responseJson,
-          expires: 1000 * 3600 * 24 * 7
-        })
-        .then(()=>{
-          this.setState({visible: false});
-          this.props.navigation.dispatch(resetActionHome);
-        });
+    http.http('GET', 'users/getCurrentUser/')
+    .then((response) => response.json())
+    .then((responseJson)=>{
+      return global.storage.save({
+        key: 'user',
+        data: responseJson,
+        expires: 1000 * 3600 * 24 * 7
       })
-      .catch((error) => {
-        this.setState({visible: false});
-        utils.showAlert('Error', 'Al conectarse con el servicio');
-      });
-    }else{
+    })
+    .then(()=>{
+      this.setState({visible: false});
+      this.props.navigation.dispatch(resetActionHome);
+    })
+    .catch((error) => {
       this.setState({visible: false});
       utils.showAlert('Error', 'Al conectarse con el servicio');
-    }
+    });
   }
+
 
   _onLogin = () =>{
     this.setState({visible: true});
@@ -115,29 +112,30 @@ export default class Login extends Component {
         password: this.state.password,
       })
     })
-      .then((response) => response.json())
-      .then((responseJson) => {
-        if(responseJson.hasOwnProperty('token')){
-          global.storage.save({
-          	key: 'token',
-          	data: responseJson.token,
-          	expires: 1000 * 3600 * 24 * 7
-          })
-          .then(()=>{
-            this._getCurrentUser();
-          });
-        }else{
-          this.setState({visible: false});
-          utils.showAlert("Error", "Credenciales erroneas");
-        }
-      })
-      .catch((error) => {
+    .then((response) => response.json())
+    .then((responseJson) => {
+      if(responseJson.hasOwnProperty('token')){
+        global.storage.save({
+        	key: 'token',
+        	data: responseJson.token,
+        	expires: 1000 * 3600 * 24 * 7
+        })
+        .then(()=>{
+          this._getCurrentUser();
+        });
+      }else{
         this.setState({visible: false});
         utils.showAlert("Error", "Credenciales erroneas");
-      });
+      }
+    })
+    .catch((error) => {
+      this.setState({visible: false});
+      utils.showAlert("Error", "Credenciales erroneas");
+    });
   }
 
   render() {
+    const { navigate } = this.props.navigation;
     return (
       <StyleProvider style={getTheme()}>
         <View style={styles.container}>
@@ -170,6 +168,10 @@ export default class Login extends Component {
             full>
             <Text style={styles.loginText}>SIGN IN!</Text>
           </Button>
+          <TouchableOpacity onPress={() => navigate('recoverPassword')}>
+            <Text style={styles.recoverPassword}>Recuperar contraseña?</Text>
+          </TouchableOpacity>
+
         </View>
       </StyleProvider>
     );

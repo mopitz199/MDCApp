@@ -19,8 +19,8 @@ export const validation = {
     },
     length: {
       minimum:{
-        val: 5,
-        message: 'Your password must be at least 5 characters'
+        val: 6,
+        message: 'Your password must be at least 6 characters'
       }
     }
   },

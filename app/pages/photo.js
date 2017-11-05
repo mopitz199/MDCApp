@@ -120,7 +120,7 @@ export default class Photo extends Component {
 
   _successAlert(){
     Alert.alert(
-      'Exito',
+      'Great!',
       'Se ha borrado el registro del trade',
       [{text: 'Aceptar', onPress: this._onPressSuccessAlert}],
       { cancelable: false }
@@ -134,20 +134,15 @@ export default class Photo extends Component {
 
   _onDelete = () => {
     this.setState({visible:true})
-    resp = http.http('DELETE', 'trades/'+this.state.params.trade.id+"/")
-    if(resp!=null){
-      resp.then((response) => {
-        this.setState({visible: false});
-        this._successAlert()
-      })
-      .catch((error) => {
-        this.setState({visible: false});
-        utils.showAlert('Error', 'Al conectarse con el servicio');
-      });
-    }else{
+    http.http('DELETE', 'trades/'+this.state.params.trade.id+"/")
+    .then((response) => {
+      this.setState({visible: false});
+      this._successAlert()
+    })
+    .catch((error) => {
       this.setState({visible: false});
       utils.showAlert('Error', 'Al conectarse con el servicio');
-    }
+    });
   }
 
   _showRemoveIcon(){

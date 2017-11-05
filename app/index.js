@@ -24,6 +24,9 @@ import CreateTrade from './pages/create-trade';
 import Photo from './pages/photo';
 import OtherTrades from './pages/other-trades';
 import Profile from './pages/profile';
+import RecoverPassword from './pages/recover-password';
+import InsertRecoveryCode from './pages/insert-recovery-code';
+import ChangePassword from './pages/change-password';
 
 import './utils/global';
 
@@ -37,6 +40,9 @@ const SimpleApp = StackNavigator({
   photo: { screen: Photo },
   otherTrades: { screen: OtherTrades },
   profile: { screen: Profile },
+  recoverPassword: { screen: RecoverPassword },
+  insertRecoveryCode: { screen: InsertRecoveryCode },
+  changePassword: { screen: ChangePassword },
 });
 
 const app = () => {

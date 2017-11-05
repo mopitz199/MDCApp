@@ -148,7 +148,7 @@ export default class CreateTrade extends Component {
 
   _successAlert(){
     Alert.alert(
-      'Exito',
+      'Great!',
       'Se ha guardado correctamnte',
       [{text: 'Aceptar', onPress: this._onPressSuccessAlert}],
       { cancelable: false }
@@ -182,24 +182,20 @@ export default class CreateTrade extends Component {
             let img = "data:image/png;base64,"+base64;
             let trade = this._buildTradeObject();
             trade['photo'] = img;
-            resp = http.http('post', 'trades/', JSON.stringify(trade));
-            if(resp!=null){
-              resp.then((response)=>{
-                this.setState({visible: false});
-                if(response["ok"]){
-                  this._successAlert()
-                }else{
-                  let error = utils.getError(response);
-                  utils.showAlert(error[0], error[1]);
-                }
-              })
-              resp.catch((error) => {
-                this.setState({visible: false});
-                utils.showAlert('Error', 'Al conectarse con el servicio');
-              });
-            }else{
+            http.http('post', 'trades/', JSON.stringify(trade))
+            .then((response)=>{
               this.setState({visible: false});
-            }
+              if(response["ok"]){
+                this._successAlert()
+              }else{
+                let error = utils.getError(response);
+                utils.showAlert(error[0], error[1]);
+              }
+            })
+            .catch((error) => {
+              this.setState({visible: false});
+              utils.showAlert('Error', 'Al conectarse con el servicio');
+            });
           })
         })
         .catch(err => {

@@ -72,20 +72,15 @@ export default class OtherTrades extends Component {
 
   _loadTrades = () => {
     this.setState({visible: true});
-    resp = http.http('GET', 'trades/?user='+this.state.params.id)
-    if(resp!=null){
-      resp.then((response) => response.json())
-      .then((responseJson)=>{
-        this.setState({visible: false, data: responseJson, readyToRender: true, refreshing: false});
-      })
-      .catch((error) => {
-        this.setState({visible: false, refreshing: false});
-        utils.showAlert('Error', 'Al conectarse con el servicio');
-      });
-    }else{
+    http.http('GET', 'trades/?user='+this.state.params.id)
+    .then((response) => response.json())
+    .then((responseJson)=>{
+      this.setState({visible: false, data: responseJson, readyToRender: true, refreshing: false});
+    })
+    .catch((error) => {
       this.setState({visible: false, refreshing: false});
       utils.showAlert('Error', 'Al conectarse con el servicio');
-    }
+    });
   }
 
 

@@ -2,14 +2,14 @@
 import Storage from 'react-native-storage';
 import { AsyncStorage, Platform } from 'react-native';
 
-//global.url = 'http://104.154.20.121/';
-//global.apiUrl = 'http://104.154.20.121/api/';
+//global.url = 'http://104.154.186.29/';
+//global.apiUrl = 'http://104.154.186.29/api/';
 
 global.statusBarHeight = (Platform.OS === 'ios')?0:24
 global.navBarHeight = 56
 
-global.url = 'http://192.168.0.7:8000/';
-global.apiUrl = 'http://192.168.0.7:8000/api/';
+global.url = 'http://192.168.0.14:8000/';
+global.apiUrl = 'http://192.168.0.14:8000/api/';
 
 
 global.storage = new Storage({

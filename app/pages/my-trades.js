@@ -76,22 +76,18 @@ export default class MyTrades extends Component {
     this.setState({visible: true});
     global.storage.load({
       key: 'user',
-    }).then(ret => {
-      resp = http.http('GET', 'trades/?user='+ret.id)
-      if(resp!=null){
-        resp.then((response) => response.json())
-        .then((responseJson)=>{
-          this.setState({visible: false, data: responseJson, readyToRender: true, refreshing: false});
-        })
-        .catch((error) => {
-          this.setState({visible: false, refreshing: false});
-          utils.showAlert('Error', 'Al conectarse con el servicio');
-        });
-      }else{
-        this.setState({visible: false, refreshing: false});
-        utils.showAlert('Error', 'Al conectarse con el servicio');
-      }
     })
+    .then(ret => {
+      return http.http('GET', 'trades/?user='+ret.id)
+    })
+    .then((response) => response.json())
+    .then((responseJson)=>{
+      this.setState({visible: false, data: responseJson, readyToRender: true, refreshing: false});
+    })
+    .catch((error) => {
+      this.setState({visible: false, refreshing: false});
+      utils.showAlert('Error', 'Al conectarse con el servicio');
+    });
   }
 
 

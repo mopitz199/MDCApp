@@ -36,10 +36,6 @@ import * as http from '../utils/http';
 // Import the custom theme
 import * as theme from '../styles/theme';
 
-// Module to convert
-import RNFetchBlob from 'react-native-fetch-blob';
-const fs = RNFetchBlob.fs
-
 // Validations
 import {validate} from '../utils/validation';
 
@@ -75,6 +71,7 @@ export default class Profile extends Component {
       key: 'user',
     }).then(ret => {
       this.setState({
+        'visible': false,
         'user': ret,
         'username': ret['username'],
         'email': ret['email'],
@@ -119,7 +116,7 @@ export default class Profile extends Component {
 
   _successAlert(){
     Alert.alert(
-      'Exito',
+      'Great!',
       'Se ha guardado correctamnte',
       [{text: 'Aceptar', onPress: this._onPressSuccessAlert}],
       { cancelable: false }
@@ -135,24 +132,20 @@ export default class Profile extends Component {
         first_name: this.state.name,
         last_name: this.state.lastName
       }
-      resp = http.http('put', 'users/'+this.state.user.id+"/", JSON.stringify(data));
-      if(resp!=null){
-        resp.then((response)=>{
-          this.setState({visible: false});
-          if(response["ok"]){
-            this._successAlert()
-          }else{
-            let error = utils.getError(response);
-            utils.showAlert(error[0], error[1]);
-          }
-        })
-        resp.catch((error) => {
-          this.setState({visible: false});
-          utils.showAlert('Error', 'Al conectarse con el servicio');
-        });
-      }else{
+      http.http('put', 'users/'+this.state.user.id+"/", JSON.stringify(data))
+      .then((response)=>{
         this.setState({visible: false});
-      }
+        if(response["ok"]){
+          this._successAlert()
+        }else{
+          let error = utils.getError(response);
+          utils.showAlert(error[0], error[1]);
+        }
+      })
+      .catch((error) => {
+        this.setState({visible: false});
+        utils.showAlert('Error', 'Al conectarse con el servicio');
+      });
     }
   }
 
@@ -160,6 +153,7 @@ export default class Profile extends Component {
     return (
       <ScrollView style={styles.container}>
         <View style={styles.inputContainer}>
+          <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
           <Item floatingLabel>
             <Label>Username</Label>
             <Input
@@ -176,7 +170,7 @@ export default class Profile extends Component {
             />
           </Item>
           <Text style={styles.errorMessage}>{this.state.usernameErrorMessage}</Text>
-      </View>
+        </View>
         <View style={styles.inputContainer}>
           <Item style={styles.itemInput} floatingLabel>
             <Label>Email</Label>

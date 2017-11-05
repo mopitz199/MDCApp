@@ -1,40 +1,48 @@
 // Import utils
 import * as utils from './utils';
 
-export function http(method, path, data=null){
+export async function http(method, path, data=null, useToken=true){
   let fullUrl = global.apiUrl+path;
   if(method=="GET"){
-    return global.storage.load({
-      key: 'token',
-    }).then(ret => {
+    if(useToken){
+      let token = await global.storage.load({key: 'token'})
       return fetch(fullUrl, {
         method: method,
         headers: {
-          'Authorization': 'Token '+ret,
+          'Authorization': 'Token '+token,
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         }
       })
-    }).catch(err => {
-      utils.showAlert(err.name, err.message);
-      return null;
-    })
-  }else{
-    return global.storage.load({
-      key: 'token',
-    }).then(ret => {
+    }else{
       return fetch(fullUrl, {
         method: method,
         headers: {
-          'Authorization': 'Token '+ret,
+          'Accept': 'application/json',
+        }
+      })
+    }
+  }else{
+    if(useToken){
+      let token = await global.storage.load({key: 'token'})
+      return fetch(fullUrl, {
+        method: method,
+        headers: {
+          'Authorization': 'Token '+token,
           'Accept': 'application/json',
           'Content-Type': 'application/json',
         },
         body: data
       })
-    }).catch(err => {
-      utils.showAlert(err.name, err.message);
-      return null;
-    })
+    }else{
+      return fetch(fullUrl, {
+        method: method,
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: data
+      })
+    }
   }
 }
