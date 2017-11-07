@@ -69,26 +69,36 @@ export default class RecoverPassword extends Component {
     )
   }
 
-  _onSendCode = () => {
-    this.setState({visible: true});
-    let data = {
-      'email': this.state.email
+  _validateForm(){
+    let fields = [
+      ['email', this.state.email, 'Email'],
+    ];
+    v = validate(fields);
+    if(!v[0]){
+      utils.showAlert(v[2], v[1]);
+      return v[0];
     }
+    return true
+  }
 
-    this.setState({visible: false});
-    http.http('POST', 'generateRecoveryCode/', JSON.stringify(data), useToken=false)
-    .then((response)=>{
-      this.setState({visible: false});
-      if(response["ok"]){
-        this._successAlert()
-      }else{
-        utils.showAlert('Error', 'We couldn\'t send the email');
-      }
-    })
-    .catch((error) => {
-      this.setState({visible: false});
-      utils.showAlert('Error', 'Sever connection');
-    });
+  _onSendCode = () => {
+    if(this._validateForm()){
+      this.setState({visible: true});
+      let data = {'email': this.state.email}
+      http.http('POST', 'generateRecoveryCode/', JSON.stringify(data), useToken=false)
+      .then((response)=>{
+        this.setState({visible: false});
+        if(response["ok"]){
+          this._successAlert()
+        }else{
+          utils.showAlert('Ops!', 'We couldn\'t send the email');
+        }
+      })
+      .catch((error) => {
+        this.setState({visible: false});
+        utils.showAlert('Ops!', 'Sever connection');
+      });
+    }
   }
 
   render() {

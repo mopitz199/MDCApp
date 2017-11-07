@@ -58,9 +58,23 @@ export default class InsertRecoveryCode extends Component {
   });
 
   _onValidateCode = () => {
-    // Validate codigo
     const { navigate } = this.props.navigation;
-    navigate('changePassword')
+    this.setState({visible: true});
+    let data = {'code': this.state.code}
+    http.http('POST', 'validateRecoveryCode/', JSON.stringify(data), useToken=false)
+    .then((response)=>response.json())
+    .then((res)=>{
+      this.setState({visible: false});
+      navigate('changePassword', {
+        'code': this.state.code,
+        'email': res['email']
+      })
+    })
+    .catch((error)=>{
+      this.setState({visible: false});
+      utils.showAlert('Ops!', 'The code is not valid.');
+    })
+
   }
 
 

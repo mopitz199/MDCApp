@@ -44,7 +44,6 @@ export default class MyTrades extends Component {
 
   constructor(props){
     super(props);
-    this.currentRouteName = 'my-trades';
     this.state = {
       visible: false,
       readyToRender: false,

@@ -94,7 +94,7 @@ export default class Login extends Component {
     })
     .catch((error) => {
       this.setState({visible: false});
-      utils.showAlert('Error', 'Al conectarse con el servicio');
+      utils.showAlert('Error', 'Connection error');
     });
   }
 
@@ -125,12 +125,12 @@ export default class Login extends Component {
         });
       }else{
         this.setState({visible: false});
-        utils.showAlert("Error", "Credenciales erroneas");
+        utils.showAlert("Error", "Wrong credentials");
       }
     })
     .catch((error) => {
       this.setState({visible: false});
-      utils.showAlert("Error", "Credenciales erroneas");
+      utils.showAlert("Error", "Wrong credentials");
     });
   }
 
@@ -169,7 +169,7 @@ export default class Login extends Component {
             <Text style={styles.loginText}>SIGN IN!</Text>
           </Button>
           <TouchableOpacity onPress={() => navigate('recoverPassword')}>
-            <Text style={styles.recoverPassword}>Recuperar contraseña?</Text>
+            <Text style={styles.recoverPassword}>Did you lose your password?</Text>
           </TouchableOpacity>
 
         </View>
