@@ -93,7 +93,7 @@ export default class ChangePassword extends Component {
     Alert.alert(
       'Great!',
       'The password was changed',
-      [{text: 'Aceptar', onPress: this._onPressSuccessAlert}],
+      [{text: 'Accept', onPress: this._onPressSuccessAlert}],
       { cancelable: false }
     )
   }

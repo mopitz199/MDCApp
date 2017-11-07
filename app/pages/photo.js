@@ -121,8 +121,8 @@ export default class Photo extends Component {
   _successAlert(){
     Alert.alert(
       'Great!',
-      'Se ha borrado el registro del trade',
-      [{text: 'Aceptar', onPress: this._onPressSuccessAlert}],
+      'It has been deleted successfully',
+      [{text: 'Accept', onPress: this._onPressSuccessAlert}],
       { cancelable: false }
     )
   }

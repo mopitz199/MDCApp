@@ -118,7 +118,7 @@ export default class Profile extends Component {
     Alert.alert(
       'Great!',
       'Se ha guardado correctamnte',
-      [{text: 'Aceptar', onPress: this._onPressSuccessAlert}],
+      [{text: 'Accept', onPress: this._onPressSuccessAlert}],
       { cancelable: false }
     )
   }

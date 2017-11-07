@@ -64,6 +64,7 @@
 		595E8B36E46A4C92ADE12A72 /* Zocial.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 3B002024B06342B2A1193948 /* Zocial.ttf */; };
 		F0B0A780235344549E8CD534 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = 82BE9056E5CD4B1A832414DD /* OFL.txt */; };
 		E7337A6FC4474AAE833B70BB /* libRNSVG.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 57C1EF734B88474581A76242 /* libRNSVG.a */; };
+		B332ABE714234CD899706B3F /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D2D23E9E4DD6408C93726F38 /* libRCTImageResizer.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -324,6 +325,8 @@
 		82BE9056E5CD4B1A832414DD /* OFL.txt */ = {isa = PBXFileReference; name = "OFL.txt"; path = "../node_modules/native-base/Fonts/OFL.txt"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = unknown; explicitFileType = undefined; includeInIndex = 0; };
 		6EDB613ABD754BE58D305E81 /* RNSVG.xcodeproj */ = {isa = PBXFileReference; name = "RNSVG.xcodeproj"; path = "../node_modules/react-native-svg/ios/RNSVG.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		57C1EF734B88474581A76242 /* libRNSVG.a */ = {isa = PBXFileReference; name = "libRNSVG.a"; path = "libRNSVG.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		49AE286EE08240758B5A1142 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; name = "RCTImageResizer.xcodeproj"; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		D2D23E9E4DD6408C93726F38 /* libRCTImageResizer.a */ = {isa = PBXFileReference; name = "libRCTImageResizer.a"; path = "libRCTImageResizer.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -357,6 +360,7 @@
 				0197D16388F547DE81E09A9E /* libRCTOrientation.a in Frameworks */,
 				CBF206C0E80D4FD08A06C2C8 /* libRNVectorIcons.a in Frameworks */,
 				E7337A6FC4474AAE833B70BB /* libRNSVG.a in Frameworks */,
+				B332ABE714234CD899706B3F /* libRCTImageResizer.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -530,6 +534,7 @@
 				C6B296E0C1FF459DAA11818C /* RCTOrientation.xcodeproj */,
 				1E32612156E44810B07DACDE /* RNVectorIcons.xcodeproj */,
 				6EDB613ABD754BE58D305E81 /* RNSVG.xcodeproj */,
+				49AE286EE08240758B5A1142 /* RCTImageResizer.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1137,6 +1142,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1145,6 +1151,7 @@
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-resizer/ios/RCTImageResizer",
 				);
 			};
 			name = Debug;
@@ -1170,6 +1177,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1178,6 +1186,7 @@
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-resizer/ios/RCTImageResizer",
 				);
 			};
 			name = Release;
@@ -1204,6 +1213,7 @@
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-resizer/ios/RCTImageResizer",
 				);
 			};
 			name = Debug;
@@ -1229,6 +1239,7 @@
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-resizer/ios/RCTImageResizer",
 				);
 			};
 			name = Release;
@@ -1263,6 +1274,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1271,6 +1283,7 @@
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-resizer/ios/RCTImageResizer",
 				);
 			};
 			name = Debug;
@@ -1305,6 +1318,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1313,6 +1327,7 @@
 					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 					"$(SRCROOT)/../node_modules/react-native-vector-icons/RNVectorIconsManager",
 					"$(SRCROOT)/../node_modules/react-native-svg/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-image-resizer/ios/RCTImageResizer",
 				);
 			};
 			name = Release;
@@ -1342,6 +1357,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1366,6 +1382,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

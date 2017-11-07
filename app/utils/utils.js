@@ -23,7 +23,7 @@ export function showAlert(title, message){
     title,
     message,
     [
-      {text: 'Aceptar', onPress: () => console.log('OK Pressed')},
+      {text: 'Accept', onPress: () => console.log('OK Pressed')},
     ],
     { cancelable: false }
   )

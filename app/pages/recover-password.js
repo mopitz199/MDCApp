@@ -64,7 +64,7 @@ export default class RecoverPassword extends Component {
     Alert.alert(
       'Great!',
       'We have sent the recovery code successfully',
-      [{text: 'Aceptar'}],
+      [{text: 'Accept'}],
       { cancelable: false }
     )
   }

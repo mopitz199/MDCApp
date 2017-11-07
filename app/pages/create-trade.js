@@ -33,6 +33,8 @@ import CustomCalendarIcon from '../components/custom-calendar-icon';
 
 import Dimensions from 'Dimensions';
 
+import ImageResizer from 'react-native-image-resizer';
+
 // Import utils
 import * as utils from '../utils/utils';
 
@@ -149,8 +151,8 @@ export default class CreateTrade extends Component {
   _successAlert(){
     Alert.alert(
       'Great!',
-      'Se ha guardado correctamnte',
-      [{text: 'Aceptar', onPress: this._onPressSuccessAlert}],
+      'It has been saved successfully',
+      [{text: 'Accept', onPress: this._onPressSuccessAlert}],
       { cancelable: false }
     )
   }
@@ -168,40 +170,47 @@ export default class CreateTrade extends Component {
       const options = {};
       this.camera.capture({metadata: options})
       .then((data) => {
-        let base64 = ''
-        fs.readStream(
-            data["path"],
-            'base64',
-            4095)
-        .then((ifstream) => {
-          ifstream.open()
-          ifstream.onData((chunk) => {base64 += chunk})
-          ifstream.onError((err) => {utils.showAlert('Error', err)})
-          ifstream.onEnd(() => {
-            // Aca obtengo el archivo en base64
-            let img = "data:image/png;base64,"+base64;
-            let trade = this._buildTradeObject();
-            trade['photo'] = img;
-            http.http('post', 'trades/', JSON.stringify(trade))
-            .then((response)=>{
-              this.setState({visible: false});
-              if(response["ok"]){
-                this._successAlert()
-              }else{
-                let error = utils.getError(response);
-                utils.showAlert(error[0], error[1]);
-              }
+        ImageResizer.createResizedImage(data["path"], 700, 700, 'JPEG', 100).then((response) => {
+          // Here we have the response with the resized uri
+          let base64 = ''
+          fs.readStream(
+              response.uri,
+              'base64',
+              4095)
+          .then((ifstream) => {
+            ifstream.open()
+            ifstream.onData((chunk) => {base64 += chunk})
+            ifstream.onError((err) => {utils.showAlert('Error', err)})
+            ifstream.onEnd(() => {
+              // Here we have the base64 of resized image
+              let img = "data:image/png;base64,"+base64;
+              let trade = this._buildTradeObject();
+              trade['photo'] = img;
+              http.http('post', 'trades/', JSON.stringify(trade))
+              .then((resp)=>{
+                this.setState({visible: false});
+                if(resp["ok"]){
+                  this._successAlert()
+                }else{
+                  let error = utils.getError(resp);
+                  utils.showAlert(error[0], error[1]);
+                }
+              })
+              .catch((error) => {
+                this.setState({visible: false});
+                utils.showAlert('Ops', 'Problem connecting to the server');
+              });
             })
-            .catch((error) => {
-              this.setState({visible: false});
-              utils.showAlert('Error', 'Al conectarse con el servicio');
-            });
           })
-        })
-        .catch(err => {
+          .catch(err => {
+            this.setState({visible: false});
+            utils.showAlert('Ops', 'Problem reading the picture');
+          });
+        }).catch((err) => {
           this.setState({visible: false});
-          utils.showAlert('Error', 'Al leer la foto');
+          utils.showAlert('Ops', 'Problem resizing the picture');
         });
+
       })
       .catch(err => {
         this.setState({visible: false});
