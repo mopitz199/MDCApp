@@ -59,6 +59,9 @@ export default class MyTrades extends Component {
     DeviceEventEmitter.addListener('tradeDeleted', (e)=>{
       this._loadTrades();
     })
+    DeviceEventEmitter.addListener('tradeEdited', (e)=>{
+      this._loadTrades();
+    })
   }
 
   componentDidMount(){

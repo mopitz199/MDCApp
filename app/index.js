@@ -27,6 +27,7 @@ import Profile from './pages/profile';
 import RecoverPassword from './pages/recover-password';
 import InsertRecoveryCode from './pages/insert-recovery-code';
 import ChangePassword from './pages/change-password';
+import EditTrade from './pages/edit-trade';
 
 import './utils/global';
 
@@ -43,6 +44,7 @@ const SimpleApp = StackNavigator({
   recoverPassword: { screen: RecoverPassword },
   insertRecoveryCode: { screen: InsertRecoveryCode },
   changePassword: { screen: ChangePassword },
+  editTrade: { screen: EditTrade },
 });
 
 const app = () => {

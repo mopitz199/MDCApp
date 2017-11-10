@@ -132,16 +132,10 @@ export default class Photo extends Component {
     DeviceEventEmitter.emit('tradeDeleted',  {})
   }
 
-  _onDelete = () => {
-    this.setState({visible:true})
-    http.http('DELETE', 'trades/'+this.state.params.trade.id+"/")
-    .then((response) => {
-      this.setState({visible: false});
-      this._successAlert()
-    })
-    .catch((error) => {
-      this.setState({visible: false});
-      utils.showAlert('Error', 'Al conectarse con el servicio');
+  _onEdit = () => {
+    const { navigate } = this.props.navigation;
+    navigate('editTrade', {
+      trade: this.state.params.trade,
     });
   }
 
@@ -149,7 +143,7 @@ export default class Photo extends Component {
     if(this.state.showRemoveIcon){
       return(
         <TouchableHighlight
-          onPress={this._onDelete}
+          onPress={this._onEdit}
           style={{
             paddingTop: 15,
             paddingBottom: 15,
@@ -158,7 +152,7 @@ export default class Photo extends Component {
           }}
           >
           <FontAwesome
-            name="trash"
+            name="pencil"
             size={25}
             color={theme.secondaryTextColor}
           />
