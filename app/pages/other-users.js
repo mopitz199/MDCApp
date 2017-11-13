@@ -55,7 +55,9 @@ export default class OtherUsers extends Component {
 
 
   static navigationOptions = ({ navigation }) => ({
-    tabBarLabel: 'Others'
+    headerStyle:{ backgroundColor: theme.primaryNormalColor},
+    headerTintColor: 'white',
+    title: 'Friends'
   });
 
 

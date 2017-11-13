@@ -30,9 +30,9 @@ import getTheme from '../../native-base-theme/components';
 import * as theme from '../styles/theme';
 
 
-const resetActionHome = NavigationActions.reset({
+const resetActionMyTrades = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'home'})]
+  actions: [NavigationActions.navigate({ routeName: 'myTrades'})]
 });
 
 const resetActionLogin = NavigationActions.reset({
@@ -57,8 +57,8 @@ export default class Splash extends Component {
 
   componentWillMount(){
     BackHandler.addEventListener('hardwareBackPress', function() {
-      const { dispatch, navigation, nav } = this.props;
-      return true;
+      if(global.currentIndex>0)return false;
+      else return true;
     }.bind(this));
   }
 
@@ -66,7 +66,7 @@ export default class Splash extends Component {
     global.storage.load({
       key: 'token',
     }).then(ret => {
-      this.props.navigation.dispatch(resetActionHome);
+      this.props.navigation.dispatch(resetActionMyTrades);
     }).catch(err => {
       this.props.navigation.dispatch(resetActionLogin);
     });

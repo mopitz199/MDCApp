@@ -23,6 +23,8 @@ import { StyleProvider } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Spinner from 'react-native-loading-spinner-overlay';
 
+import { BackHandler } from 'react-native';
+
 // Get the default theme
 import getTheme from '../../native-base-theme/components';
 
@@ -40,6 +42,11 @@ import TradeItemList from '../components/trade-item-list';
 
 import CustomActionButton from '../components/action-button';
 
+import SideMenu from 'react-native-side-menu';
+import Menu from '../components/menu';
+
+import HomeLeftHeader from '../components/home-left-header';
+
 export default class MyTrades extends Component {
 
   constructor(props){
@@ -48,7 +55,8 @@ export default class MyTrades extends Component {
       visible: false,
       readyToRender: false,
       refreshing: false,
-      platform: Platform.OS
+      platform: Platform.OS,
+      isOpen: false,
     }
   }
 
@@ -65,13 +73,31 @@ export default class MyTrades extends Component {
   }
 
   componentDidMount(){
+    this.props.navigation.setParams({
+        _toggleMenu: this._toggleMenu
+    });
     this._loadTrades();
   }
 
+  static navigationOptions = ({ navigation }) => {
+    const {params = {}} = navigation.state;
+    return {
+      headerStyle:{ backgroundColor: theme.primaryNormalColor},
+      headerTintColor: 'white',
+      headerLeft: <HomeLeftHeader navigation={navigation} _toggleMenu={params._toggleMenu} />
+    };
+  }
 
-  static navigationOptions = ({ navigation }) => ({
-    tabBarLabel: 'My Trades'
-  });
+
+  _toggleMenu = () => {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+  }
+
+  _updateMenuState(isOpen) {
+    this.setState({ isOpen });
+  }
 
 
   _loadTrades = () => {
@@ -107,19 +133,26 @@ export default class MyTrades extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
+    const menu = <Menu navigation={this.props.navigation} _goStatistics={this._goStatistics}/>;
     return (
       <StyleProvider style={getTheme()}>
-        <View style={styles.container}>
-          <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
-          <FlatList
-            data = {this.state.data}
-            keyExtractor={this._keyExtractor}
-            renderItem={({item}) => <TradeItemList data={[item, navigate]} />}
-            refreshing = {this.state.refreshing}
-            onRefresh = {this._handleRefresh}
-          />
-          {this.state.platform!='ios'?<CustomActionButton navigate={navigate} />:null}
-        </View>
+        <SideMenu
+          menu={menu}
+          isOpen={this.state.isOpen}
+          onChange={isOpen => this._updateMenuState(isOpen)}
+        >
+          <View style={styles.container}>
+            <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
+            <FlatList
+              data = {this.state.data}
+              keyExtractor={this._keyExtractor}
+              renderItem={({item}) => <TradeItemList data={[item, navigate]} />}
+              refreshing = {this.state.refreshing}
+              onRefresh = {this._handleRefresh}
+            />
+            {this.state.platform!='ios'?<CustomActionButton navigate={navigate} />:null}
+          </View>
+        </SideMenu>
       </StyleProvider>
     );
   }

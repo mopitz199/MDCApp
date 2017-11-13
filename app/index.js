@@ -28,15 +28,18 @@ import RecoverPassword from './pages/recover-password';
 import InsertRecoveryCode from './pages/insert-recovery-code';
 import ChangePassword from './pages/change-password';
 import EditTrade from './pages/edit-trade';
+import MyTrades from './pages/my-trades';
+import OtherUsers from './pages/other-users';
+import Statistics from './pages/statistics';
 
 import './utils/global';
 
 import {HomeTab} from './router/home-tab';
 
+
 const SimpleApp = StackNavigator({
   splash: { screen: Splash },
   login: { screen: Login },
-  home: { screen: HomeTab },
   createTrade: { screen: CreateTrade },
   photo: { screen: Photo },
   otherTrades: { screen: OtherTrades },
@@ -45,14 +48,24 @@ const SimpleApp = StackNavigator({
   insertRecoveryCode: { screen: InsertRecoveryCode },
   changePassword: { screen: ChangePassword },
   editTrade: { screen: EditTrade },
+  myTrades: { screen: MyTrades },
+  statistics: { screen: Statistics },
+  friends: { screen: OtherUsers },
 });
 
-const app = () => {
-  return (
-    <Root>
-      <SimpleApp />
-    </Root>
-  )
+
+class app extends Component {
+  _onNavigationStateChange = (prevState, newState) => {
+    global.currentIndex = newState.index;
+    //this.setState({...this.state, route_index: newState.index});
+  }
+  render() {
+    return (
+      <Root>
+        <SimpleApp onNavigationStateChange={this._onNavigationStateChange}/>
+      </Root>
+    )
+  }
 }
 
 AppRegistry.registerComponent('MDC', () => app);

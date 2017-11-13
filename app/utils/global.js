@@ -8,6 +8,7 @@ global.apiUrl = 'http://104.154.186.29/api/';
 global.statusBarHeight = (Platform.OS === 'ios')?0:24
 global.navBarHeight = 56
 
+global.currentIndex = 0;
 //global.url = 'http://192.168.0.14:8000/';
 //global.apiUrl = 'http://192.168.0.14:8000/api/';
 

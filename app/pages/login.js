@@ -38,9 +38,9 @@ import * as http from '../utils/http';
 import * as theme from '../styles/theme';
 
 
-const resetActionHome = NavigationActions.reset({
+const resetActionMyTrades = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'home'})]
+  actions: [NavigationActions.navigate({ routeName: 'myTrades'})]
 });
 
 export default class Login extends Component {
@@ -64,12 +64,7 @@ export default class Login extends Component {
     header: null,
   };
 
-  componentWillMount(){
-    this._logout();
-  }
-
-
-  _logout = () =>{
+  _logout = () => {
     global.storage.remove({
     	key: 'token'
     });
@@ -90,7 +85,7 @@ export default class Login extends Component {
     })
     .then(()=>{
       this.setState({visible: false});
-      this.props.navigation.dispatch(resetActionHome);
+      this.props.navigation.dispatch(resetActionMyTrades);
     })
     .catch((error) => {
       this.setState({visible: false});
@@ -124,6 +119,7 @@ export default class Login extends Component {
           this._getCurrentUser();
         });
       }else{
+        this._logout();
         this.setState({visible: false});
         utils.showAlert("Error", "Wrong credentials");
       }

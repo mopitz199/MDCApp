@@ -46,9 +46,9 @@ import * as theme from '../styles/theme';
 // Validations
 import {validate} from '../utils/validation';
 
-const resetActionHome = NavigationActions.reset({
+const resetActionMyTrades = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'home'})]
+  actions: [NavigationActions.navigate({ routeName: 'myTrades'})]
 });
 
 export default class EditTrade extends Component {
@@ -162,12 +162,12 @@ export default class EditTrade extends Component {
 
 
   _onPressSuccessEditedAlert = () => {
-    this.props.navigation.dispatch(resetActionHome);
+    this.props.navigation.dispatch(resetActionMyTrades);
     DeviceEventEmitter.emit('tradeEdited',  {})
   }
 
   _onPressSuccessDeletedAlert = () => {
-    this.props.navigation.dispatch(resetActionHome);
+    this.props.navigation.dispatch(resetActionMyTrades);
     DeviceEventEmitter.emit('tradeDeleted',  {})
   }
 

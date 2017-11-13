@@ -73,6 +73,12 @@ export default class Statistics extends Component {
     )
   }
 
+  static navigationOptions = ({ navigation }) => ({
+    headerStyle:{ backgroundColor: theme.primaryNormalColor},
+    headerTintColor: 'white',
+    title: 'Statistics'
+  });
+
 
   componentWillMount(){
     this._loadStatistics();
