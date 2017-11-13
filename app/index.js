@@ -34,8 +34,6 @@ import Statistics from './pages/statistics';
 
 import './utils/global';
 
-import {HomeTab} from './router/home-tab';
-
 
 const SimpleApp = StackNavigator({
   splash: { screen: Splash },
@@ -57,7 +55,6 @@ const SimpleApp = StackNavigator({
 class app extends Component {
   _onNavigationStateChange = (prevState, newState) => {
     global.currentIndex = newState.index;
-    //this.setState({...this.state, route_index: newState.index});
   }
   render() {
     return (

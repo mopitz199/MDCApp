@@ -15,13 +15,16 @@ export default styles = StyleSheet.flatten({
   itemContainer:{
     borderBottomColor: 'white',
     borderBottomWidth: 1,
-    padding: 15,
+    padding: 12,
     flexDirection: 'row',
     alignItems: 'center'
+  },
+  iconContainer:{
+    width: 40,
   },
   text:{
     color: 'white',
     fontSize: 17,
-    marginLeft: 8,
+    marginLeft: 2,
   },
 });

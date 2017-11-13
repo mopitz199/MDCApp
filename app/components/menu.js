@@ -67,28 +67,36 @@ export default class Menu extends Component {
           style={styles.itemContainer}
           onPress={this._goStatistics}
           >
-          {this._buidIcon('pie-chart', '#2d9c16')}
+          <View style={styles.iconContainer}>
+            {this._buidIcon('pie-chart', '#2d9c16')}
+          </View>
           <Text style={styles.text}>Statistics</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.itemContainer}
           onPress={this._goProfile}
           >
-          {this._buidIcon('user', '#ffa65d')}
+          <View style={styles.iconContainer}>
+            {this._buidIcon('user', '#ffa65d')}
+          </View>
           <Text style={styles.text}>Profile</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.itemContainer}
           onPress={this._goFriends}
           >
-          {this._buidIcon('users', '#31b1cd')}
+          <View style={styles.iconContainer}>
+            {this._buidIcon('users', '#31b1cd')}
+          </View>
           <Text style={styles.text}>Friends</Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.itemContainer}
           onPress={this._goLogout}
           >
-          {this._buidIcon('sign-out', '#be5e64')}
+          <View style={styles.iconContainer}>
+            {this._buidIcon('sign-out', '#be5e64')}
+          </View>
           <Text style={styles.text}>Logout</Text>
         </TouchableOpacity>
       </ScrollView>

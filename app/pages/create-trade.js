@@ -89,7 +89,8 @@ export default class CreateTrade extends Component {
 
   static navigationOptions = ({ navigation }) => ({
     headerStyle:{ backgroundColor: theme.primaryNormalColor},
-    headerTintColor: 'white'
+    headerTintColor: 'white',
+    title: 'Create Trade'
   });
 
   componentDidMount(){

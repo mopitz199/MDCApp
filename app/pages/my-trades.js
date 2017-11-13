@@ -84,6 +84,7 @@ export default class MyTrades extends Component {
     return {
       headerStyle:{ backgroundColor: theme.primaryNormalColor},
       headerTintColor: 'white',
+      title: 'My Trades',
       headerLeft: <HomeLeftHeader navigation={navigation} _toggleMenu={params._toggleMenu} />
     };
   }
