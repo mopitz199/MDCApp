@@ -9,8 +9,8 @@ export const styles = StyleSheet.flatten({
     alignItems: 'center',
   },
   logo:{
-    height: 75,
-    width: 75,
+    height: 135,
+    width: 135,
     marginBottom: 30,
   },
   title:{

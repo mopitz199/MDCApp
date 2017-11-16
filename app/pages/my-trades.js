@@ -10,7 +10,9 @@ import {
   StyleSheet,
   TouchableHighlight,
   FlatList,
-  Platform
+  Platform,
+  Picker,
+  TouchableWithoutFeedback
 } from 'react-native';
 
 import {DeviceEventEmitter} from 'react-native';
@@ -21,6 +23,7 @@ import { styles } from '../styles/my-trades';
 // Npm packages
 import { StyleProvider } from 'native-base';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Ionicon from 'react-native-vector-icons/Ionicons';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 import { BackHandler } from 'react-native';
@@ -41,11 +44,14 @@ import * as theme from '../styles/theme';
 import TradeItemList from '../components/trade-item-list';
 
 import CustomActionButton from '../components/action-button';
+import SelectIOS from '../components/ios-select';
 
 import SideMenu from 'react-native-side-menu';
 import Menu from '../components/menu';
 
 import HomeLeftHeader from '../components/home-left-header';
+
+import SimplePicker from 'react-native-simple-picker';
 
 export default class MyTrades extends Component {
 
@@ -57,6 +63,8 @@ export default class MyTrades extends Component {
       refreshing: false,
       platform: Platform.OS,
       isOpen: false,
+      sortBy: '-date',
+      label: 'Date (descendant)'
     }
   }
 
@@ -107,7 +115,9 @@ export default class MyTrades extends Component {
       key: 'user',
     })
     .then(ret => {
-      return http.http('GET', 'trades/?user='+ret.id)
+      let url = 'trades/?user='+ret.id
+      if(this.state.sortBy)url+=("&ordering="+this.state.sortBy)
+      return http.http('GET', url)
     })
     .then((response) => response.json())
     .then((responseJson)=>{
@@ -131,6 +141,65 @@ export default class MyTrades extends Component {
     })
   }
 
+  _renderIOSSelect(){
+    const data = [
+      {key: '-date', label: 'Date (descendant)'},
+      {key: 'date', label: 'Date (ascendent)'},
+      {key: '-profit', label: 'Profit (descendant)'},
+      {key: 'profit', label: 'Profit (ascendent)'},
+      {key: '-stop', label: 'Stop (descendant)'},
+      {key: 'stop', label: 'Stop (ascendent)'},
+    ]
+    return (
+      <SelectIOS
+        onPress={this._onSortIOSByChange}
+        firstIndex={0}
+        color={'black'}
+        style={styles.iosPicker}
+        textSize={14}
+        iconSize={25}
+        data={data}
+        iconType={'md-arrow-dropdown'}
+      />
+    )
+  }
+
+  _renderAndroidSelect(){
+    return(
+      <Picker
+        style={styles.androidPicker}
+        selectedValue={this.state.sortBy}
+        mode="dropdown"
+        onValueChange={(itemValue, itemIndex) => this._onSortAndroidByChange(itemValue, itemIndex)}>
+        <Picker.Item label="Date (descendant)" value="-date" />
+        <Picker.Item label="Date (ascendent)" value="date" />
+        <Picker.Item label="Profit (descendant)" value="-profit" />
+        <Picker.Item label="Profit (ascendent)" value="profit" />
+        <Picker.Item label="Stop (descendant)" value="-stop" />
+        <Picker.Item label="Stop (ascendent)" value="stop" />
+      </Picker>
+    )
+  }
+
+  _onSortAndroidByChange = (value, label) => {
+    this.setState({sortBy: value, label: label})
+    this._loadTrades()
+  }
+
+
+  _renderSelect(){
+    if(Platform.OS==="ios"){
+      return this._renderIOSSelect()
+    }else{
+      return this._renderAndroidSelect()
+    }
+  }
+
+  _onSortIOSByChange = (itemLabel, itemValue) => {
+    this.setState({sortBy: itemValue, label: itemLabel})
+    this._loadTrades()
+  }
+
 
   render() {
     const { navigate } = this.props.navigation;
@@ -144,6 +213,12 @@ export default class MyTrades extends Component {
         >
           <View style={styles.container}>
             <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
+            <View style={styles.toolBarContainer}>
+              {this._renderSelect()}
+              <View style={styles.filterButtonContainer}>
+                <Text style={styles.filterText}>Filter</Text>
+              </View>
+            </View>
             <FlatList
               data = {this.state.data}
               keyExtractor={this._keyExtractor}

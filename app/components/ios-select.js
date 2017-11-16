@@ -1,0 +1,103 @@
+/**
+ * Sample React Native App
+ * https://github.com/facebook/react-native
+ * @flow
+ */
+import React, { Component } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableWithoutFeedback
+} from 'react-native';
+
+//import { StyleSheet, Platform } from 'react-native';
+//import * as theme from './theme';
+//const platform = Platform.OS;
+
+import Icon from 'react-native-vector-icons/FontAwesome';
+import Ionicon from 'react-native-vector-icons/Ionicons';
+
+import SimplePicker from 'react-native-simple-picker';
+
+// Import the custom theme
+import * as theme from '../styles/theme';
+
+//import { styles } from '../styles/ios-select';
+
+export default class SelectIOS extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      label: this.props.data[this.props.firstIndex]['label']
+    }
+  }
+
+  _onSortIOSByChange = (option) => {
+    for (var i = 0; i < this.props.data.length; i++) {
+      if(this.props.data[i]['key']==option){
+        this.props.onPress(this.props.data[i]['label'],option);
+        break;
+      }
+    }
+  }
+
+  _getLabels = () => {
+    let res = []
+    for (var i = 0; i < this.props.data.length; i++) {
+      res.push(this.props.data[i]['label'])
+    }
+    return res
+  }
+
+  _getKeys = () => {
+    let res = []
+    for (var i = 0; i < this.props.data.length; i++) {
+      res.push(this.props.data[i]['key'])
+    }
+    return res
+  }
+
+  render() {
+    return (
+      <TouchableWithoutFeedback
+        onPress={() => {this.refs.picker.show()}}
+      >
+        <View style={[styles.selectContainer, this.props.style]}>
+          <Text style={[
+            {
+              color: this.props.color,
+              fontSize: this.props.textSize
+            } ,styles.selectText
+          ]}>
+            {this.state.label}
+          </Text>
+          <Ionicon
+            name={this.props.iconType}
+            size={this.props.iconSize}
+            color={this.props.color}
+          />
+          <SimplePicker
+            ref={'picker'}
+            initialOptionIndex={this.props.firstIndex}
+            options={this._getKeys()}
+            labels={this._getLabels()}
+            onSubmit={(option) => {this._onSortIOSByChange(option)}}
+          />
+        </View>
+      </TouchableWithoutFeedback>
+    );
+  }
+}
+
+const styles = StyleSheet.create({
+  selectContainer:{
+    alignItems: 'center',
+    flexDirection: 'row',
+    justifyContent:'space-between',
+  },
+  selectText:{
+    marginRight: 10,
+  },
+});
