@@ -3,10 +3,8 @@ package com.mdc;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
-import fr.bamlab.rnimageresizer.ImageResizerPackage;
-import com.horcrux.svg.SvgPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
-import com.github.yamill.orientation.OrientationPackage;
+import fr.bamlab.rnimageresizer.ImageResizerPackage;
 import com.RNFetchBlob.RNFetchBlobPackage;
 import com.lwansbrough.RCTCamera.RCTCameraPackage;
 import com.facebook.react.ReactNativeHost;
@@ -29,10 +27,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new ImageResizerPackage(),
-            new SvgPackage(),
             new VectorIconsPackage(),
-            new OrientationPackage(),
+            new ImageResizerPackage(),
             new RNFetchBlobPackage(),
             new RCTCameraPackage()
       );

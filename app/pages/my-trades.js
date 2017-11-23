@@ -12,7 +12,7 @@ import {
   FlatList,
   Platform,
   Picker,
-  TouchableWithoutFeedback
+  TouchableOpacity
 } from 'react-native';
 
 import {DeviceEventEmitter} from 'react-native';
@@ -52,6 +52,7 @@ import Menu from '../components/menu';
 import HomeLeftHeader from '../components/home-left-header';
 
 import SimplePicker from 'react-native-simple-picker';
+
 
 export default class MyTrades extends Component {
 
@@ -200,11 +201,30 @@ export default class MyTrades extends Component {
     this._loadTrades()
   }
 
+  _onFilterPress = () => {
+    console.warn("Max");
+  }
+
+  _renderFilter(){
+    return (
+      <TouchableOpacity
+        onPress={this._onFilterPress}
+        style={styles.filterButtonContainer}
+      >
+        <View>
+          <Text style={styles.filterText}>
+            Filter
+          </Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
 
   render() {
     const { navigate } = this.props.navigation;
     const menu = <Menu navigation={this.props.navigation} _goStatistics={this._goStatistics}/>;
-    return (
+    return(
       <StyleProvider style={getTheme()}>
         <SideMenu
           menu={menu}
@@ -215,9 +235,7 @@ export default class MyTrades extends Component {
             <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
             <View style={styles.toolBarContainer}>
               {this._renderSelect()}
-              <View style={styles.filterButtonContainer}>
-                <Text style={styles.filterText}>Filter</Text>
-              </View>
+              {this._renderFilter()}
             </View>
             <FlatList
               data = {this.state.data}
@@ -230,7 +248,7 @@ export default class MyTrades extends Component {
           </View>
         </SideMenu>
       </StyleProvider>
-    );
+    )
   }
 
 }

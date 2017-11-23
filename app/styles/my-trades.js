@@ -8,6 +8,7 @@ export const styles = StyleSheet.flatten({
   },
   toolBarContainer:{
     flexDirection: 'row',
+    height: 50,
     padding: platform=="ios"?8:0,
     justifyContent: 'center',
     alignItems: 'center',
@@ -17,15 +18,17 @@ export const styles = StyleSheet.flatten({
   },
   iosPicker:{
     flex: 1,
+    height: 50,
   },
   androidPicker:{
     flex: 1.3,
-    borderWidth: 2,
-    borderColor: 'red',
+    height: 50,
   },
   filterButtonContainer:{
+    height: 50,
     flex: 1,
-    alignItems: 'center'
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   filterText:{
     fontSize: 17,
