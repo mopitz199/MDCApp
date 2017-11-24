@@ -51,8 +51,6 @@ import Menu from '../components/menu';
 
 import HomeLeftHeader from '../components/home-left-header';
 
-import SimplePicker from 'react-native-simple-picker';
-
 
 export default class MyTrades extends Component {
 
@@ -70,15 +68,25 @@ export default class MyTrades extends Component {
   }
 
   componentWillMount() {
-    DeviceEventEmitter.addListener('tradeCreated', (e)=>{
+    this.tradeCreatedListener = DeviceEventEmitter.addListener('tradeCreated', (e)=>{
       this._loadTrades();
     })
-    DeviceEventEmitter.addListener('tradeDeleted', (e)=>{
+    this.tradeDeletedListener = DeviceEventEmitter.addListener('tradeDeleted', (e)=>{
       this._loadTrades();
     })
-    DeviceEventEmitter.addListener('tradeEdited', (e)=>{
+    this.tradeEditedListener = DeviceEventEmitter.addListener('tradeEdited', (e)=>{
       this._loadTrades();
     })
+    this.applyFiltersListener = DeviceEventEmitter.addListener('applyFilters', (e)=>{
+      this._loadTrades(e.result);
+    })
+  }
+
+  componentWillUnmount(){
+    this.tradeCreatedListener.remove();
+    this.tradeDeletedListener.remove();
+    this.tradeEditedListener.remove();
+    this.applyFiltersListener.remove();
   }
 
   componentDidMount(){
@@ -110,7 +118,7 @@ export default class MyTrades extends Component {
   }
 
 
-  _loadTrades = () => {
+  _loadTrades = (filter=null) => {
     this.setState({visible: true});
     global.storage.load({
       key: 'user',
@@ -118,6 +126,7 @@ export default class MyTrades extends Component {
     .then(ret => {
       let url = 'trades/?user='+ret.id
       if(this.state.sortBy)url+=("&ordering="+this.state.sortBy)
+      if(filter!=null)url+=("&result="+filter)
       return http.http('GET', url)
     })
     .then((response) => response.json())
@@ -202,7 +211,8 @@ export default class MyTrades extends Component {
   }
 
   _onFilterPress = () => {
-    console.warn("Max");
+    const { navigate } = this.props.navigation;
+    navigate('filter');
   }
 
   _renderFilter(){

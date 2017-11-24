@@ -31,6 +31,7 @@ import EditTrade from './pages/edit-trade';
 import MyTrades from './pages/my-trades';
 import OtherUsers from './pages/other-users';
 import Statistics from './pages/statistics';
+import Filter from './pages/filter';
 
 import './utils/global';
 
@@ -49,6 +50,7 @@ const SimpleApp = StackNavigator({
   myTrades: { screen: MyTrades },
   statistics: { screen: Statistics },
   friends: { screen: OtherUsers },
+  filter: { screen: Filter },
 });
 
 
