@@ -63,7 +63,8 @@ export default class MyTrades extends Component {
       platform: Platform.OS,
       isOpen: false,
       sortBy: '-date',
-      label: 'Date (descendant)'
+      label: 'Date (descendant)',
+      filtersApplied: null
     }
   }
 
@@ -78,7 +79,7 @@ export default class MyTrades extends Component {
       this._loadTrades();
     })
     this.applyFiltersListener = DeviceEventEmitter.addListener('applyFilters', (e)=>{
-      this._loadTrades(e.result);
+      this._loadTrades(e);
     })
   }
 
@@ -118,15 +119,23 @@ export default class MyTrades extends Component {
   }
 
 
-  _loadTrades = (filter=null) => {
-    this.setState({visible: true});
+  _loadTrades = (filtersApplied=null) => {
+    this.setState({
+      visible: true,
+      filtersApplied: filtersApplied
+    });
     global.storage.load({
       key: 'user',
     })
     .then(ret => {
       let url = 'trades/?user='+ret.id
       if(this.state.sortBy)url+=("&ordering="+this.state.sortBy)
-      if(filter!=null)url+=("&result="+filter)
+      if(filtersApplied!=null){
+        console.warn(JSON.stringify(filtersApplied));
+        for(key in filtersApplied){
+          if(filtersApplied[key]!='all')url+=('&'+key+'='+filtersApplied[key])
+        }
+      }
       return http.http('GET', url)
     })
     .then((response) => response.json())
@@ -193,7 +202,7 @@ export default class MyTrades extends Component {
 
   _onSortAndroidByChange = (value, label) => {
     this.setState({sortBy: value, label: label})
-    this._loadTrades()
+    this._loadTrades(this.state.filtersApplied)
   }
 
 
@@ -207,12 +216,12 @@ export default class MyTrades extends Component {
 
   _onSortIOSByChange = (itemLabel, itemValue) => {
     this.setState({sortBy: itemValue, label: itemLabel})
-    this._loadTrades()
+    this._loadTrades(this.state.filtersApplied)
   }
 
   _onFilterPress = () => {
     const { navigate } = this.props.navigation;
-    navigate('filter');
+    navigate('filter', {filtersApplied: this.state.filtersApplied});
   }
 
   _renderFilter(){

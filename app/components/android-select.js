@@ -23,12 +23,12 @@ export default class SelectAndroid extends Component {
 
   constructor(props) {
     super(props);
-
     this.state = {
-      value: this.props.data[this.props.label],
-      label: this.props.label
+      value: this.props.value,
     }
   }
+
+
 
   _getItems = () => {
     let data = this.props.data

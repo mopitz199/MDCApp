@@ -49,9 +49,11 @@ export default class Filter extends Component {
 
   constructor(props){
     super(props);
+    const { params } = this.props.navigation.state;
+    let filtersApplied = params.filtersApplied
     this.state = {
-      result: 'all',
-      type: 'all'
+      result: filtersApplied!=null?filtersApplied['result']:'all',
+      tradeType: filtersApplied!=null?filtersApplied['tradeType']:'all'
     }
   }
 
@@ -62,6 +64,7 @@ export default class Filter extends Component {
   });
 
   _renderAndroidResultSelect = () => {
+    const { params } = this.props.navigation.state;
     let data = {
       'All': 'all',
       'Win': 'w',
@@ -70,7 +73,7 @@ export default class Filter extends Component {
     return(
       <SelectAndroid
         data={data}
-        label={'All'}
+        value={this.state.result}
         color={'white'}
         backgroundColor={theme.primaryLightColor}
         onChange={(itemValue, itemIndex) => {this.setState({result:itemValue})} }
@@ -80,6 +83,7 @@ export default class Filter extends Component {
   }
 
   _renderAndroidTypeSelect = () => {
+    const { params } = this.props.navigation.state;
     let data = {
       'All': 'all', 'A1': 'a1', 'A2': 'a2', 'A3': 'a3',
       '20': '20', '80': '80', 'CBOT': 'cbot', 'XOVER': 'xover',
@@ -88,10 +92,10 @@ export default class Filter extends Component {
     return (
       <SelectAndroid
         data={data}
-        label={'All'}
+        value={this.state.tradeType}
         color={'white'}
         backgroundColor={theme.primaryLightColor}
-        onChange={(itemValue, itemIndex) => {this.setState({type:itemValue})} }
+        onChange={(itemValue, itemIndex) => {this.setState({tradeType:itemValue})} }
       >
       </SelectAndroid>
     )
@@ -111,7 +115,7 @@ export default class Filter extends Component {
     goBack();
     DeviceEventEmitter.emit('applyFilters',  {
       result: this.state.result,
-      type: this.state.type
+      tradeType: this.state.tradeType
     })
   }
 
