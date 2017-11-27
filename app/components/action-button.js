@@ -22,11 +22,21 @@ export default class CustomActionButton extends Component {
 
   render() {
     return (
-      <ActionButton
-        buttonColor={theme.primaryNormalColor}
-        buttonTextStyle={{color: 'white'}}
-        onPress={() => this.props.navigate('createTrade') }
-      />
+        <ActionButton
+          fixNativeFeedbackRadius={true}
+          buttonColor={theme.primaryNormalColor}
+          buttonTextStyle={{color: 'white'}}
+          onPress={() => this.props.navigate('createTrade') }
+          shadowStyle={{
+            shadowColor: "#000000",
+            shadowOpacity: 0.8,
+            shadowRadius: 4,
+            shadowOffset: {
+              height: 5,
+              width: 5
+            }
+          }}
+        />
     );
   }
 

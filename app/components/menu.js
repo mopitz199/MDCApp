@@ -28,7 +28,7 @@ export default class Menu extends Component {
     return (
       <Icon
         name={name}
-        size={30}
+        size={20}
         color={color}
       />
     )
@@ -37,16 +37,19 @@ export default class Menu extends Component {
   _goStatistics = () => {
     const { navigate } = this.props.navigation;
     navigate('statistics')
+    this.props._toggleMenu()
   }
 
   _goProfile = () => {
     const { navigate } = this.props.navigation;
     navigate('profile')
+    this.props._toggleMenu()
   }
 
   _goFriends = () => {
     const { navigate } = this.props.navigation;
     navigate('friends')
+    this.props._toggleMenu()
   }
 
   _goLogout = () => {
@@ -57,7 +60,9 @@ export default class Menu extends Component {
     global.storage.remove({
     	key: 'user'
     });
+    this.props._toggleMenu()
     this.props.navigation.dispatch(resetActionLogin);
+
   }
 
   render(){

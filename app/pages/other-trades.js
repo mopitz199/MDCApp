@@ -36,6 +36,7 @@ import * as theme from '../styles/theme';
 
 // Components
 import TradeItemList from '../components/trade-item-list';
+import FilterSort from '../components/filter-sort';
 
 
 export default class OtherTrades extends Component {
@@ -47,6 +48,7 @@ export default class OtherTrades extends Component {
       readyToRender: false,
       refreshing: false,
       params: props.navigation.state.params,
+      filtersApplied: null
     }
   }
 
@@ -63,16 +65,34 @@ export default class OtherTrades extends Component {
     DeviceEventEmitter.addListener('tradeDeleted', (e)=>{
       this._loadTrades();
     })
+    this.otherTradesApplyFiltersListener = DeviceEventEmitter.addListener('otherTradesApplyFilters', (e)=>{
+      this._loadTrades(e);
+    })
   }
 
   componentDidMount(){
     this._loadTrades();
   }
 
+  componentWillUnmount(){
+    this.otherTradesApplyFiltersListener.remove()
+  }
 
-  _loadTrades = () => {
-    this.setState({visible: true});
-    http.http('GET', 'trades/?user='+this.state.params.id)
+
+  _loadTrades = (filtersApplied=null) => {
+    if(filtersApplied!=null){
+      this.setState({visible: true, 'filtersApplied': filtersApplied});
+    }else{
+      this.setState({visible: true});
+    }
+    let url = 'trades/?user='+this.state.params.id
+    if(this.state.sortBy)url+=("&ordering="+this.state.sortBy)
+    if(filtersApplied!=null){
+      for(key in filtersApplied){
+        if(filtersApplied[key]!='all')url+=('&'+key+'='+filtersApplied[key])
+      }
+    }
+    http.http('GET', url)
     .then((response) => response.json())
     .then((responseJson)=>{
       this.setState({visible: false, data: responseJson, readyToRender: true, refreshing: false});
@@ -91,10 +111,20 @@ export default class OtherTrades extends Component {
     this.setState({
       refreshing: true
     }, () => {
-      this._loadTrades()
+      this._loadTrades(this.state.filtersApplied)
     })
   }
 
+  _onSortAndroidByChange = (value, label, filtersApplied) => {
+    this.setState({sortBy: value})
+    this._loadTrades(filtersApplied)
+  }
+
+
+  _onSortIOSByChange = (itemLabel, itemValue, filtersApplied) => {
+    this.setState({sortBy: itemValue})
+    this._loadTrades(filtersApplied)
+  }
 
   render() {
     const { navigate } = this.props.navigation;
@@ -102,6 +132,13 @@ export default class OtherTrades extends Component {
       <StyleProvider style={getTheme()}>
         <View style={styles.container}>
           <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
+          <FilterSort
+            _onSortIOSByChange={this._onSortIOSByChange}
+            _onSortAndroidByChange={this._onSortAndroidByChange}
+            filtersApplied={this.state.filtersApplied}
+            navigate={navigate}
+            eventEmmit={'otherTradesApplyFilters'}
+          />
           <FlatList
             data = {this.state.data}
             keyExtractor={this._keyExtractor}

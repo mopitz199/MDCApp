@@ -42,9 +42,9 @@ import * as theme from '../styles/theme';
 
 // Components
 import TradeItemList from '../components/trade-item-list';
-
 import CustomActionButton from '../components/action-button';
 import SelectIOS from '../components/ios-select';
+import FilterSort from '../components/filter-sort';
 
 import SideMenu from 'react-native-side-menu';
 import Menu from '../components/menu';
@@ -62,9 +62,7 @@ export default class MyTrades extends Component {
       refreshing: false,
       platform: Platform.OS,
       isOpen: false,
-      sortBy: '-date',
-      label: 'Date (descendant)',
-      filtersApplied: null
+      filtersApplied: null,
     }
   }
 
@@ -78,7 +76,7 @@ export default class MyTrades extends Component {
     this.tradeEditedListener = DeviceEventEmitter.addListener('tradeEdited', (e)=>{
       this._loadTrades();
     })
-    this.applyFiltersListener = DeviceEventEmitter.addListener('applyFilters', (e)=>{
+    this.myTradesapplyFiltersListener = DeviceEventEmitter.addListener('myTradesApplyFilters', (e)=>{
       this._loadTrades(e);
     })
   }
@@ -87,7 +85,7 @@ export default class MyTrades extends Component {
     this.tradeCreatedListener.remove();
     this.tradeDeletedListener.remove();
     this.tradeEditedListener.remove();
-    this.applyFiltersListener.remove();
+    this.myTradesapplyFiltersListener.remove();
   }
 
   componentDidMount(){
@@ -110,20 +108,21 @@ export default class MyTrades extends Component {
 
   _toggleMenu = () => {
     this.setState({
-      isOpen: !this.state.isOpen,
+      isOpen: !this.state.isOpen
     });
   }
 
   _updateMenuState(isOpen) {
-    this.setState({ isOpen });
+    this.setState({ isOpen,  });
   }
 
 
   _loadTrades = (filtersApplied=null) => {
-    this.setState({
-      visible: true,
-      filtersApplied: filtersApplied
-    });
+    if(filtersApplied!=null){
+      this.setState({visible: true, 'filtersApplied': filtersApplied});
+    }else{
+      this.setState({visible: true});
+    }
     global.storage.load({
       key: 'user',
     })
@@ -131,7 +130,6 @@ export default class MyTrades extends Component {
       let url = 'trades/?user='+ret.id
       if(this.state.sortBy)url+=("&ordering="+this.state.sortBy)
       if(filtersApplied!=null){
-        console.warn(JSON.stringify(filtersApplied));
         for(key in filtersApplied){
           if(filtersApplied[key]!='all')url+=('&'+key+'='+filtersApplied[key])
         }
@@ -156,93 +154,25 @@ export default class MyTrades extends Component {
     this.setState({
       refreshing: true
     }, () => {
-      this._loadTrades()
+      this._loadTrades(this.state.filtersApplied)
     })
   }
 
-  _renderIOSSelect(){
-    const data = [
-      {key: '-date', label: 'Date (descendant)'},
-      {key: 'date', label: 'Date (ascendent)'},
-      {key: '-profit', label: 'Profit (descendant)'},
-      {key: 'profit', label: 'Profit (ascendent)'},
-      {key: '-stop', label: 'Stop (descendant)'},
-      {key: 'stop', label: 'Stop (ascendent)'},
-    ]
-    return (
-      <SelectIOS
-        onPress={this._onSortIOSByChange}
-        firstIndex={0}
-        color={'black'}
-        style={styles.iosPicker}
-        textSize={14}
-        iconSize={25}
-        data={data}
-        iconType={'md-arrow-dropdown'}
-      />
-    )
-  }
-
-  _renderAndroidSelect(){
-    return(
-      <Picker
-        style={styles.androidPicker}
-        selectedValue={this.state.sortBy}
-        mode="dropdown"
-        onValueChange={(itemValue, itemIndex) => this._onSortAndroidByChange(itemValue, itemIndex)}>
-        <Picker.Item label="Date (descendant)" value="-date" />
-        <Picker.Item label="Date (ascendent)" value="date" />
-        <Picker.Item label="Profit (descendant)" value="-profit" />
-        <Picker.Item label="Profit (ascendent)" value="profit" />
-        <Picker.Item label="Stop (descendant)" value="-stop" />
-        <Picker.Item label="Stop (ascendent)" value="stop" />
-      </Picker>
-    )
-  }
-
-  _onSortAndroidByChange = (value, label) => {
-    this.setState({sortBy: value, label: label})
-    this._loadTrades(this.state.filtersApplied)
+  _onSortAndroidByChange = (value, label, filtersApplied) => {
+    this.setState({sortBy: value})
+    this._loadTrades(filtersApplied)
   }
 
 
-  _renderSelect(){
-    if(Platform.OS==="ios"){
-      return this._renderIOSSelect()
-    }else{
-      return this._renderAndroidSelect()
-    }
-  }
-
-  _onSortIOSByChange = (itemLabel, itemValue) => {
-    this.setState({sortBy: itemValue, label: itemLabel})
-    this._loadTrades(this.state.filtersApplied)
-  }
-
-  _onFilterPress = () => {
-    const { navigate } = this.props.navigation;
-    navigate('filter', {filtersApplied: this.state.filtersApplied});
-  }
-
-  _renderFilter(){
-    return (
-      <TouchableOpacity
-        onPress={this._onFilterPress}
-        style={styles.filterButtonContainer}
-      >
-        <View>
-          <Text style={styles.filterText}>
-            Filter
-          </Text>
-        </View>
-      </TouchableOpacity>
-    )
+  _onSortIOSByChange = (itemLabel, itemValue, filtersApplied) => {
+    this.setState({sortBy: itemValue})
+    this._loadTrades(filtersApplied)
   }
 
 
   render() {
     const { navigate } = this.props.navigation;
-    const menu = <Menu navigation={this.props.navigation} _goStatistics={this._goStatistics}/>;
+    const menu = <Menu navigation={this.props.navigation} _toggleMenu={this._toggleMenu}/>;
     return(
       <StyleProvider style={getTheme()}>
         <SideMenu
@@ -252,10 +182,13 @@ export default class MyTrades extends Component {
         >
           <View style={styles.container}>
             <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
-            <View style={styles.toolBarContainer}>
-              {this._renderSelect()}
-              {this._renderFilter()}
-            </View>
+            <FilterSort
+              _onSortIOSByChange={this._onSortIOSByChange}
+              _onSortAndroidByChange={this._onSortAndroidByChange}
+              filtersApplied={this.state.filtersApplied}
+              navigate={navigate}
+              eventEmmit={'myTradesApplyFilters'}
+            />
             <FlatList
               data = {this.state.data}
               keyExtractor={this._keyExtractor}
@@ -264,6 +197,7 @@ export default class MyTrades extends Component {
               onRefresh = {this._handleRefresh}
             />
             {this.state.platform!='ios'?<CustomActionButton navigate={navigate} />:null}
+            {this.state.isOpen?<View style={styles.overlay} />:null}
           </View>
         </SideMenu>
       </StyleProvider>

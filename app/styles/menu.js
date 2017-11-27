@@ -8,19 +8,19 @@ export default styles = StyleSheet.flatten({
     flex: 1,
     width: window.width,
     height: window.height,
-    backgroundColor: theme.primaryNormalColor,
-    borderTopWidth: 15,
-    borderTopColor: theme.primaryLightColor,
+    backgroundColor: '#323232',
   },
   itemContainer:{
-    borderBottomColor: 'white',
+    borderBottomColor: '#666',
     borderBottomWidth: 1,
     padding: 12,
     flexDirection: 'row',
     alignItems: 'center'
   },
   iconContainer:{
-    width: 40,
+    width: 35,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   text:{
     color: 'white',

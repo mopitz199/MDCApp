@@ -75,6 +75,8 @@ export default class Filter extends Component {
         data={data}
         value={this.state.result}
         color={'white'}
+        height={50}
+        iconPosition={13}
         backgroundColor={theme.primaryLightColor}
         onChange={(itemValue, itemIndex) => {this.setState({result:itemValue})} }
       >
@@ -94,6 +96,8 @@ export default class Filter extends Component {
         data={data}
         value={this.state.tradeType}
         color={'white'}
+        height={50}
+        iconPosition={13}
         backgroundColor={theme.primaryLightColor}
         onChange={(itemValue, itemIndex) => {this.setState({tradeType:itemValue})} }
       >
@@ -112,7 +116,12 @@ export default class Filter extends Component {
 
   _onFilterButton = () => {
     const {goBack} = this.props.navigation;
+    const { params } = this.props.navigation.state;
     goBack();
+    DeviceEventEmitter.emit(params.eventEmmit,  {
+      result: this.state.result,
+      tradeType: this.state.tradeType
+    })
     DeviceEventEmitter.emit('applyFilters',  {
       result: this.state.result,
       tradeType: this.state.tradeType

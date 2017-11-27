@@ -67,7 +67,7 @@ export default class Profile extends Component {
     title: 'Profile'
   });
 
-  componentWillMount(){
+  componentDidMount(){
     global.storage.load({
       key: 'user',
     }).then(ret => {

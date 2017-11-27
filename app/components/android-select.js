@@ -49,15 +49,33 @@ export default class SelectAndroid extends Component {
 
   render() {
     return (
-      <View style={styles.pickerContainer}>
+      <View
+        style={[
+          styles.pickerContainer,
+          {
+            backgroundColor: this.props.backgroundColor,
+          },
+          this.props.hasOwnProperty('style')?this.props.style:null
+        ]}>
         <Ionicon
-          style={styles.pickerIcon}
+          style={[
+            {
+              bottom: this.props.iconPosition
+            },
+            styles.pickerIcon
+          ]}
           name={'md-arrow-dropdown'}
           size={24}
           color={this.props.color}
         />
         <Picker
-          style={{color: this.props.color, backgroundColor: this.props.backgroundColor}}
+          style={[
+            {
+              color: this.props.color,
+              height: this.props.height
+            },
+            styles.picker
+          ]}
           selectedValue={this.state.value}
           onValueChange={(itemValue, itemIndex) => {this.onChange(itemValue, itemIndex)}}>
           {this._getItems()}
@@ -69,11 +87,15 @@ export default class SelectAndroid extends Component {
 
 const styles = StyleSheet.create({
   pickerContainer:{
+    paddingLeft: 8
+  },
+  picker:{
+    padding: 0,
+    margin: 0,
   },
   pickerIcon:{
     position: 'absolute',
     right:20,
-    bottom:10,
     zIndex: 2,
   }
 });
