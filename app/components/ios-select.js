@@ -30,31 +30,57 @@ export default class SelectIOS extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      label: this.props.data[this.props.firstIndex]['label']
+      label: null
     }
   }
 
+  componentDidMount(){
+    this.setState({
+      label: this._getLabel(this.props.defaultValue)
+    })
+  }
+
   _onSortIOSByChange = (option) => {
-    for (var i = 0; i < this.props.data.length; i++) {
-      if(this.props.data[i]['key']==option){
-        this.props.onPress(this.props.data[i]['label'],option);
+    for(let label in this.props.data){
+      if(this.props.data[label]==option){
+        this.setState({label:label})
+        this.props.onPress(option, label);
         break;
       }
     }
   }
 
+  _getIndex = (value) => {
+    let i = 0;
+    for(let label in this.props.data){
+      if(this.props.data[label]==value)return i
+      i++;
+    }
+    return 0
+  }
+
   _getLabels = () => {
     let res = []
-    for (var i = 0; i < this.props.data.length; i++) {
-      res.push(this.props.data[i]['label'])
+    for(let label in this.props.data){
+      res.push(label)
     }
     return res
   }
 
+  _getLabel = (value) => {
+    let i = 0;
+    for (let label in this.props.data) {
+      if (this.props.data.hasOwnProperty(label)) {
+        if(value==this.props.data[label])return label
+        i++
+      }
+    }
+  }
+
   _getKeys = () => {
     let res = []
-    for (var i = 0; i < this.props.data.length; i++) {
-      res.push(this.props.data[i]['key'])
+    for(let label in this.props.data){
+      res.push(this.props.data[label])
     }
     return res
   }
@@ -80,7 +106,7 @@ export default class SelectIOS extends Component {
           />
           <SimplePicker
             ref={'picker'}
-            initialOptionIndex={this.props.firstIndex}
+            initialOptionIndex={this._getIndex(this.props.defaultValue)}
             options={this._getKeys()}
             labels={this._getLabels()}
             onSubmit={(option) => {this._onSortIOSByChange(option)}}

@@ -13,6 +13,7 @@ import {
   Alert,
   ScrollView,
   TouchableOpacity,
+  Platform
 } from 'react-native';
 
 // Style
@@ -44,6 +45,7 @@ import {validate} from '../utils/validation';
 
 // Custom Components
 import SelectAndroid from '../components/android-select';
+import SelectIOS from '../components/ios-select';
 
 export default class Filter extends Component {
 
@@ -63,53 +65,70 @@ export default class Filter extends Component {
     title: 'Filter'
   });
 
-  _renderAndroidResultSelect = () => {
-    const { params } = this.props.navigation.state;
-    let data = {
-      'All': 'all',
-      'Win': 'w',
-      'Lose': 'l'
-    }
-    return(
-      <SelectAndroid
-        data={data}
-        value={this.state.result}
+  _renderIOSSelect = (data, variable) => {
+    return (
+      <SelectIOS
+        onPress={(itemValue, itemIndex) => {this.setState({[variable]:itemValue}) }}
+        defaultValue={this.state[variable]}
         color={'white'}
-        height={50}
-        iconPosition={13}
-        backgroundColor={theme.primaryLightColor}
-        onChange={(itemValue, itemIndex) => {this.setState({result:itemValue})} }
-      >
-      </SelectAndroid>
+        style={styles.iosPicker}
+        textSize={17}
+        iconSize={25}
+        data={data}
+        iconType={'md-arrow-dropdown'}
+      />
     )
   }
 
-  _renderAndroidTypeSelect = () => {
-    const { params } = this.props.navigation.state;
-    let data = {
-      'All': 'all', 'A1': 'a1', 'A2': 'a2', 'A3': 'a3',
-      '20': '20', '80': '80', 'CBOT': 'cbot', 'XOVER': 'xover',
-      'Other': 'other'
-    }
+  _renderAndroidSelect = (data, variable) => {
     return (
       <SelectAndroid
         data={data}
-        value={this.state.tradeType}
+        value={this.state[variable]}
         color={'white'}
         height={50}
         iconPosition={13}
         backgroundColor={theme.primaryLightColor}
-        onChange={(itemValue, itemIndex) => {this.setState({tradeType:itemValue})} }
+        onChange={(itemValue, itemIndex) => {this.setState({[variable]:itemValue})} }
       >
       </SelectAndroid>
     )
   }
 
-  _renderSelect(text, render){
+
+  _renderSelect = (variable) => {
+    if(Platform.OS=='ios'){
+      return this._renderIOSSelect(this._getData(variable), variable)
+    }else{
+      return this._renderAndroidSelect(this._getData(variable), variable)
+    }
+  }
+
+
+  _getData(variable){
+    if(variable=='result'){
+      return {
+        'All': 'all',
+        'Win': 'w',
+        'Lose': 'l'
+      }
+    }else if(variable=='tradeType'){
+      return {
+        'All': 'all', 'A1': 'a1', 'A2': 'a2', 'A3': 'a3',
+        '20': '20', '80': '80', 'CBOT': 'cbot', 'XOVER': 'xover',
+        'Other': 'other'
+      }
+    }else{
+      return {}
+    }
+  }
+
+
+  _renderItem(text, variable){
     return(
       <View style={styles.itemPickerContainer}>
         <Text style={styles.pickerText}>{text}</Text>
-        {render()}
+        {this._renderSelect(variable)}
       </View>
     )
   }
@@ -145,8 +164,8 @@ export default class Filter extends Component {
     return (
       <StyleProvider style={getTheme()}>
         <View style={styles.container}>
-          {this._renderSelect('Result', this._renderAndroidResultSelect)}
-          {this._renderSelect('Type', this._renderAndroidTypeSelect)}
+          {this._renderItem('Result', 'result')}
+          {this._renderItem('Type', 'tradeType')}
           {this._renderFilterButton()}
         </View>
       </StyleProvider>

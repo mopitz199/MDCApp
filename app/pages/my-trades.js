@@ -158,15 +158,15 @@ export default class MyTrades extends Component {
     })
   }
 
-  _onSortAndroidByChange = (value, label, filtersApplied) => {
+  _onSortAndroidByChange = (value, label) => {
     this.setState({sortBy: value})
-    this._loadTrades(filtersApplied)
+    this._loadTrades(this.state.filtersApplied)
   }
 
 
-  _onSortIOSByChange = (itemLabel, itemValue, filtersApplied) => {
+  _onSortIOSByChange = (itemValue, itemLabel) => {
     this.setState({sortBy: itemValue})
-    this._loadTrades(filtersApplied)
+    this._loadTrades(this.state.filtersApplied)
   }
 
 

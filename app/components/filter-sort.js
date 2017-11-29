@@ -44,6 +44,10 @@ export default class FilterSort extends Component {
     })
   }
 
+  componentWillUnmount(){
+    this.applyFiltersListener.remove()
+  }
+
   _onFilterPress = () => {
     this.props.navigate('filter', {
       filtersApplied: this.state.filtersApplied,
@@ -82,31 +86,31 @@ export default class FilterSort extends Component {
 
   _auxOnSortIOSByChange = (value, label) =>{
     this.setState({sortBy: value})
-    this.props._onSortIOSByChange(value, label, this.state.filtersApplied)
+    this.props._onSortIOSByChange(value, label)
   }
 
-  _auxOnSortAndroidByChange = (itemValue, itemIndex, filtersApplied) => {
+  _auxOnSortAndroidByChange = (itemValue, itemIndex) => {
     this.setState({sortBy: itemValue})
-    this.props._onSortAndroidByChange(itemValue, itemIndex, filtersApplied)
+    this.props._onSortAndroidByChange(itemValue, itemIndex)
   }
 
 
   _renderIOSSelect = () => {
-    const data = [
-      {key: '-date', label: 'Date (descendant)'},
-      {key: 'date', label: 'Date (ascendent)'},
-      {key: '-profit', label: 'Profit (descendant)'},
-      {key: 'profit', label: 'Profit (ascendent)'},
-      {key: '-stop', label: 'Stop (descendant)'},
-      {key: 'stop', label: 'Stop (ascendent)'},
-    ]
+    const data = {
+      'Date (descendant)': '-date',
+      'Date (ascendent)': 'date',
+      'Profit (descendant)': '-profit',
+      'Profit (ascendent)': 'profit',
+      'Stop (descendant)': '-stop',
+      'Stop (ascendent)': 'stop',
+    }
     return (
       <SelectIOS
-        onPress={this.props._onSortIOSByChange}
-        firstIndex={0}
-        color={'black'}
+        onPress={this._auxOnSortIOSByChange}
+        defaultValue={'-date'}
+        color={'white'}
         style={styles.iosPicker}
-        textSize={14}
+        textSize={17}
         iconSize={25}
         data={data}
         iconType={'md-arrow-dropdown'}
@@ -132,7 +136,7 @@ export default class FilterSort extends Component {
         height={35}
         iconPosition={5}
         backgroundColor={theme.primaryLightColor}
-        onChange={(itemValue, itemIndex) => {this._auxOnSortAndroidByChange(itemValue, itemIndex, this.state.filtersApplied)} }
+        onChange={(itemValue, itemIndex) => {this._auxOnSortAndroidByChange(itemValue, itemIndex)} }
       >
       </SelectAndroid>
     )
@@ -164,6 +168,13 @@ const styles = StyleSheet.create({
   },
   iosPicker:{
     flex: 1,
+    borderColor: theme.primaryLightColor,
+    borderWidth: 2,
+    borderRadius: 5,
+    marginRight: 5,
+    height: 39,
+    padding: 10,
+    backgroundColor: theme.primaryLightColor,
   },
   androidPicker:{
     flex: 1.3,

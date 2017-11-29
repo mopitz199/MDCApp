@@ -12,6 +12,10 @@ export const styles = StyleSheet.flatten({
     fontSize: 20,
     marginBottom: 5,
   },
+  iosPicker:{
+    backgroundColor: theme.primaryLightColor,
+    padding: 10,
+  },
   filterButton:{
     height: 40,
     backgroundColor:theme.primaryNormalColor,

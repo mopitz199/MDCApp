@@ -1,7 +1,6 @@
 package com.mdc;
 
 import com.facebook.react.ReactActivity;
-import com.horcrux.svg.SvgPackage;
 
 public class MainActivity extends ReactActivity {
 
