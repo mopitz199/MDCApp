@@ -171,47 +171,40 @@ export default class CreateTrade extends Component {
       const options = {};
       this.camera.capture({metadata: options})
       .then((data) => {
-        ImageResizer.createResizedImage(data["path"], 700, 700, 'JPEG', 100).then((response) => {
-          // Here we have the response with the resized uri
-          let base64 = ''
-          fs.readStream(
-              response.uri,
-              'base64',
-              4095)
-          .then((ifstream) => {
-            ifstream.open()
-            ifstream.onData((chunk) => {base64 += chunk})
-            ifstream.onError((err) => {utils.showAlert('Error', err)})
-            ifstream.onEnd(() => {
-              // Here we have the base64 of resized image
-              let img = "data:image/png;base64,"+base64;
-              let trade = this._buildTradeObject();
-              trade['photo'] = img;
-              http.http('post', 'trades/', JSON.stringify(trade))
-              .then((resp)=>{
-                this.setState({visible: false});
-                if(resp["ok"]){
-                  this._successAlert()
-                }else{
-                  let error = utils.getError(resp);
-                  utils.showAlert(error[0], error[1]);
-                }
-              })
-              .catch((error) => {
-                this.setState({visible: false});
-                utils.showAlert('Ops', 'Problem connecting to the server');
-              });
+        let base64 = ''
+        fs.readStream(
+            data["path"],
+            'base64',
+            4095)
+        .then((ifstream) => {
+          ifstream.open()
+          ifstream.onData((chunk) => {base64 += chunk})
+          ifstream.onError((err) => {utils.showAlert('Error', err)})
+          ifstream.onEnd(() => {
+            // Aca obtengo el archivo en base64
+            let img = "data:image/png;base64,"+base64;
+            let trade = this._buildTradeObject();
+            trade['photo'] = img;
+            http.http('post', 'trades/', JSON.stringify(trade))
+            .then((response)=>{
+              this.setState({visible: false});
+              if(response["ok"]){
+                this._successAlert()
+              }else{
+                let error = utils.getError(response);
+                utils.showAlert(error[0], error[1]);
+              }
             })
+            .catch((error) => {
+              this.setState({visible: false});
+              utils.showAlert('Error', 'Al conectarse con el servicio');
+            });
           })
-          .catch(err => {
-            this.setState({visible: false});
-            utils.showAlert('Ops', 'Problem reading the picture');
-          });
-        }).catch((err) => {
+        })
+        .catch(err => {
           this.setState({visible: false});
-          utils.showAlert('Ops', 'Problem resizing the picture');
+          utils.showAlert('Error', 'Al leer la foto');
         });
-
       })
       .catch(err => {
         this.setState({visible: false});
