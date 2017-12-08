@@ -42,18 +42,20 @@ export default class UserItemList extends Component {
 
   render() {
     return (
-      <TouchableOpacity
-        onPress={this._onPressButton}
-      >
-        <View style={styles.userItemList}>
-          <FontAwesome
-            name="user-circle"
-            size={45}
-            color={theme.primaryNormalColor}
-          />
-          <Text style={styles.itemTitle}>{this.state.data.username}</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.userItemBorder}>
+        <TouchableOpacity
+          onPress={this._onPressButton}
+        >
+          <View style={styles.userItemList}>
+            <FontAwesome
+              name="user-circle"
+              size={45}
+              color={theme.primaryNormalColor}
+            />
+            <Text style={styles.itemTitle}>{this.state.data.username}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     );
   }
 

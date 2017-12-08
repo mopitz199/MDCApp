@@ -46,10 +46,21 @@ export default class TradeItemList extends Component {
   _onPressButton = () => {
     this.state.navigate('photo', {
       trade: this.state.data,
-      /*userId: this.state.data.user,
-      url: this.state.data.photo,
-      id: this.state.data.id*/
     });
+  }
+
+  _tradeTypeRender(val){
+    let mapping = {
+       'a1': 'A1',
+       'a2': 'A2',
+       'a3': 'A3',
+       '20': '20',
+       '80': '80',
+       'cbot': 'CBOT',
+       'xover': 'XOVER',
+       'other': 'Other',
+    }
+    return mapping[val]
   }
 
   _getTradeDirection = () => {
@@ -64,26 +75,30 @@ export default class TradeItemList extends Component {
 
   render() {
     return (
-      <TouchableOpacity onPress={this._onPressButton}>
-        <View style={styles.tradeItemList}>
-          <Image
-            style={styles.tradeItemListLeft}
-            source={{uri: this.state.data.photoThumbnail}}
-          />
-          <View style={styles.tradeItemListCenter}>
-            <View style={styles.tradeItemListTopInfo}>
-              <Text style={styles.date}>{this.state.data.date}</Text>
-              <Text style={styles.time}>{this.state.data.time}</Text>
+      <View style={styles.tradeItemBorder}>
+        <TouchableOpacity onPress={this._onPressButton}>
+          <View style={styles.tradeItemList}>
+            <Image
+              style={styles.tradeItemListLeft}
+              source={{uri: this.state.data.photoThumbnail}}
+            />
+            <View style={styles.tradeItemListCenter}>
+              <View style={styles.tradeItemListTopInfo}>
+                <Text style={styles.date}>{this.state.data.date}</Text>
+                <Text style={styles.time}>{this.state.data.time}</Text>
+              </View>
+              <View style={styles.tradeItemListBottomInfo}>
+                <Text style={styles.tradeType}>
+                  Trade type: {this._tradeTypeRender(this.state.data.tradeType)}
+                </Text>
+              </View>
             </View>
-            <View style={styles.tradeItemListBottomInfo}>
-              <Text style={styles.tradeType}>Tipo: {this.state.data.tradeType}</Text>
+            <View style={styles.tradeItemListRight}>
+              <Text style={[styles.result, this.state.data.result=='w'?styles.winResult:styles.loseResult]} >{this._calculateResult()}</Text>
             </View>
           </View>
-          <View style={styles.tradeItemListRight}>
-            <Text style={[styles.result, this.state.data.result=='w'?styles.winResult:styles.loseResult]} >{this._calculateResult()}</Text>
-          </View>
-        </View>
-      </TouchableOpacity>
+        </TouchableOpacity>
+      </View>
     );
   }
 

@@ -68,19 +68,20 @@ export const styles = StyleSheet.flatten({
   },
 
   selectContainer:{
+    marginLeft: 10,
+    marginRight: 10,
+    marginBottom: 10,
     flexDirection: 'row',
   },
 
   tradeTypeSelect:{
     flex: 1,
-    marginLeft:15,
-    marginRight: -15,
-    color: theme.primaryTextColor,
+    borderColor: theme.primaryLightColor,
   },
 
   resultSelect:{
     flex: 1,
-    marginLeft:30,
+    marginLeft:10,
     color: theme.primaryTextColor,
   },
 

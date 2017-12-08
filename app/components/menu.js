@@ -68,42 +68,50 @@ export default class Menu extends Component {
   render(){
     return (
       <ScrollView scrollsToTop={false} style={styles.menu}>
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={this._goStatistics}
-          >
-          <View style={styles.iconContainer}>
-            {this._buidIcon('pie-chart', '#2d9c16')}
-          </View>
-          <Text style={styles.text}>Statistics</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={this._goProfile}
-          >
-          <View style={styles.iconContainer}>
-            {this._buidIcon('user', '#ffa65d')}
-          </View>
-          <Text style={styles.text}>Profile</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={this._goFriends}
-          >
-          <View style={styles.iconContainer}>
-            {this._buidIcon('users', '#31b1cd')}
-          </View>
-          <Text style={styles.text}>Friends</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.itemContainer}
-          onPress={this._goLogout}
-          >
-          <View style={styles.iconContainer}>
-            {this._buidIcon('sign-out', '#be5e64')}
-          </View>
-          <Text style={styles.text}>Logout</Text>
-        </TouchableOpacity>
+        <View style={styles.iconContainerBorder}>
+          <TouchableOpacity
+            style={styles.itemContainer}
+            onPress={this._goStatistics}
+            >
+            <View style={styles.iconContainer}>
+              {this._buidIcon('pie-chart', '#2d9c16')}
+            </View>
+            <Text style={styles.text}>Statistics</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.iconContainerBorder}>
+          <TouchableOpacity
+            style={styles.itemContainer}
+            onPress={this._goProfile}
+            >
+            <View style={styles.iconContainer}>
+              {this._buidIcon('user', '#ffa65d')}
+            </View>
+            <Text style={styles.text}>Profile</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.iconContainerBorder}>
+          <TouchableOpacity
+            style={styles.itemContainer}
+            onPress={this._goFriends}
+            >
+            <View style={styles.iconContainer}>
+              {this._buidIcon('users', '#31b1cd')}
+            </View>
+            <Text style={styles.text}>Friends</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.iconContainerBorder}>
+          <TouchableOpacity
+            style={styles.itemContainer}
+            onPress={this._goLogout}
+            >
+            <View style={styles.iconContainer}>
+              {this._buidIcon('sign-out', '#be5e64')}
+            </View>
+            <Text style={styles.text}>Logout</Text>
+          </TouchableOpacity>
+        </View>
       </ScrollView>
     );
   }

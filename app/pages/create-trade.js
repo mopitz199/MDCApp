@@ -51,6 +51,8 @@ const fs = RNFetchBlob.fs
 // Validations
 import {validate} from '../utils/validation';
 
+import SelectAndroid from '../components/android-select';
+
 export default class CreateTrade extends Component {
 
   constructor(props){
@@ -214,13 +216,60 @@ export default class CreateTrade extends Component {
   }
 
 
+  _renderAndroidTradeTypeSelect(){
+    let data = {
+      'A1': 'a1',
+      'A2': 'a2',
+      'A3': 'a3',
+      '20': '20',
+      '80': '80',
+      'CBOT': 'cbot',
+      'XOVER': 'xover',
+      'Other': 'other',
+    }
+    return(
+      <SelectAndroid
+        data={data}
+        style={styles.tradeTypeSelect}
+        value={this.state.tradeType}
+        color={theme.primaryTextColor}
+        height={35}
+        iconPosition={7}
+        backgroundColor={'white'}
+        onChange={(itemValue, itemIndex) => this.setState({tradeType: itemValue}) }
+      >
+      </SelectAndroid>
+    )
+  }
+
+  _renderAndroidResultSelect(){
+    let data = {
+      'Win': 'w',
+      'Lose': 'l',
+    }
+    return(
+      <SelectAndroid
+        data={data}
+        style={styles.resultSelect}
+        value={this.state.result}
+        color={theme.primaryTextColor}
+        height={35}
+        iconPosition={7}
+        backgroundColor={'white'}
+        onChange={(itemValue, itemIndex) => this.setState({result: itemValue}) }
+      >
+      </SelectAndroid>
+    )
+  }
+
+
   _portraitFormRender(){
     return (
       <Form style={styles.form}>
         <View style={styles.enterContainer}>
           <Item floatingLabel error={this.state.enterError} style={[styles.inputItem, this.state.enterError?styles.inputItemError:null]}>
             <Label style={styles.input}>
-              Enter
+              Entry
               <Text style={theme.inputRequired.enabled}> *</Text>
             </Label>
             <Input
@@ -313,28 +362,8 @@ export default class CreateTrade extends Component {
           </View>
         </View>
         <View style={styles.selectContainer}>
-          <Picker
-            style={styles.tradeTypeSelect}
-            selectedValue={this.state.tradeType}
-            onValueChange={(itemValue, itemIndex) => this.setState({tradeType: itemValue}) }
-            >
-            <Picker.Item label="A1" value="a1" />
-            <Picker.Item label="A2" value="a2" />
-            <Picker.Item label="A3" value="a3" />
-            <Picker.Item label="20" value="20" />
-            <Picker.Item label="80" value="80" />
-            <Picker.Item label="CBOT" value="cbot" />
-            <Picker.Item label="XOVER" value="xover" />
-            <Picker.Item label="Otra" value="other" />
-          </Picker>
-          <Picker
-            style={styles.resultSelect}
-            selectedValue={this.state.result}
-            onValueChange={(itemValue, itemIndex) => this.setState({result: itemValue})}
-            >
-            <Picker.Item label="Ganada" value="w" />
-            <Picker.Item label="Perdida" value="l" />
-          </Picker>
+          {this._renderAndroidTradeTypeSelect()}
+          {this._renderAndroidResultSelect()}
         </View>
         <View style={[
           styles.cameraContainer,
@@ -348,7 +377,7 @@ export default class CreateTrade extends Component {
             ref={(cam) => {this.camera = cam;}}
             style={styles.camera}
             aspect={Camera.constants.Aspect.fill}>
-            <Text style={styles.capture} onPress={this._takePicture.bind(this)}>GUARDAR</Text>
+            <Text style={styles.capture} onPress={this._takePicture.bind(this)}>SAVE</Text>
           </Camera>
         </View>
       </Form>

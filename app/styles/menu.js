@@ -10,9 +10,11 @@ export default styles = StyleSheet.flatten({
     height: window.height,
     backgroundColor: '#323232',
   },
-  itemContainer:{
+  iconContainerBorder:{
     borderBottomColor: '#666',
     borderBottomWidth: 1,
+  },
+  itemContainer:{
     padding: 12,
     flexDirection: 'row',
     alignItems: 'center'
