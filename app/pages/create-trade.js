@@ -170,7 +170,9 @@ export default class CreateTrade extends Component {
   _takePicture() {
     if(this._validateForm()){
       this.setState({visible: true});
-      const options = {};
+      const options = {
+        captureQuality: '480p'
+      };
       this.camera.capture({metadata: options})
       .then((data) => {
         let base64 = ''

@@ -210,7 +210,7 @@ export default class Profile extends Component {
           onPress={this._onSaveButton}
           >
           <View style={styles.saveButton}>
-            <Text style={styles.saveTextButton}>GUARDAR</Text>
+            <Text style={styles.saveTextButton}>SAVE</Text>
           </View>
         </TouchableOpacity>
       </ScrollView>
