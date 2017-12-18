@@ -64,7 +64,15 @@ export default class Profile extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerStyle:{ backgroundColor: theme.primaryNormalColor},
     headerTintColor: 'white',
-    title: 'Profile'
+    title: 'Profile',
+    drawerLabel: 'Profile',
+    drawerIcon: () => (
+      <Icon
+        name={'user'}
+        size={20}
+        color={'#ffa65d'}
+      />
+    )
   });
 
   componentDidMount(){

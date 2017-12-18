@@ -57,7 +57,15 @@ export default class OtherUsers extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerStyle:{ backgroundColor: theme.primaryNormalColor},
     headerTintColor: 'white',
-    title: 'Friends'
+    title: 'Friends',
+    drawerLabel: 'Friends',
+    drawerIcon: () => (
+      <Icon
+        name={'users'}
+        size={20}
+        color={'#31b1cd'}
+      />
+    )
   });
 
 

@@ -40,6 +40,14 @@ const resetActionLogin = NavigationActions.reset({
   actions: [NavigationActions.navigate({ routeName: 'login'})]
 });
 
+
+class Null extends Component {
+  render(){
+    return null
+  }
+}
+
+
 export default class Splash extends Component {
 
   constructor(props){
@@ -52,6 +60,7 @@ export default class Splash extends Component {
 
   static navigationOptions = {
     header: null,
+    drawerLabel: <Null/>
   };
 
 

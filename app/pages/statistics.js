@@ -76,7 +76,15 @@ export default class Statistics extends Component {
   static navigationOptions = ({ navigation }) => ({
     headerStyle:{ backgroundColor: theme.primaryNormalColor},
     headerTintColor: 'white',
-    title: 'Statistics'
+    title: 'Statistics',
+    drawerLabel: 'Statistics',
+    drawerIcon: () => (
+      <Icon
+        name={'pie-chart'}
+        size={20}
+        color={'#2d9c16'}
+      />
+    )
   });
 
 

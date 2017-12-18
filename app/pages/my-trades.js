@@ -51,6 +51,11 @@ import Menu from '../components/menu';
 
 import HomeLeftHeader from '../components/home-left-header';
 
+class Null extends Component {
+  render(){
+    return null
+  }
+}
 
 export default class MyTrades extends Component {
 
@@ -101,7 +106,8 @@ export default class MyTrades extends Component {
       headerStyle:{ backgroundColor: theme.primaryNormalColor},
       headerTintColor: 'white',
       title: 'My Trades',
-      headerLeft: <HomeLeftHeader navigation={navigation} _toggleMenu={params._toggleMenu} />
+      headerLeft: <HomeLeftHeader navigation={navigation} _toggleMenu={params._toggleMenu} />,
+      drawerLabel: <Null/>
     };
   }
 
@@ -175,31 +181,25 @@ export default class MyTrades extends Component {
     const menu = <Menu navigation={this.props.navigation} _toggleMenu={this._toggleMenu}/>;
     return(
       <StyleProvider style={getTheme()}>
-        <SideMenu
-          menu={menu}
-          isOpen={this.state.isOpen}
-          onChange={isOpen => this._updateMenuState(isOpen)}
-        >
-          <View style={styles.container}>
-            <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
-            <FilterSort
-              _onSortIOSByChange={this._onSortIOSByChange}
-              _onSortAndroidByChange={this._onSortAndroidByChange}
-              filtersApplied={this.state.filtersApplied}
-              navigate={navigate}
-              eventEmmit={'myTradesApplyFilters'}
-            />
-            <FlatList
-              data = {this.state.data}
-              keyExtractor={this._keyExtractor}
-              renderItem={({item}) => <TradeItemList data={[item, navigate]} />}
-              refreshing = {this.state.refreshing}
-              onRefresh = {this._handleRefresh}
-            />
-            {this.state.platform!='ios'?<CustomActionButton navigate={navigate} />:null}
-            {this.state.isOpen?<View style={styles.overlay} />:null}
-          </View>
-        </SideMenu>
+        <View style={styles.container}>
+          <Spinner visible={this.state.visible} overlayColor={"rgba(0, 0, 0, 0.7)"}/>
+          <FilterSort
+            _onSortIOSByChange={this._onSortIOSByChange}
+            _onSortAndroidByChange={this._onSortAndroidByChange}
+            filtersApplied={this.state.filtersApplied}
+            navigate={navigate}
+            eventEmmit={'myTradesApplyFilters'}
+          />
+          <FlatList
+            data = {this.state.data}
+            keyExtractor={this._keyExtractor}
+            renderItem={({item}) => <TradeItemList data={[item, navigate]} />}
+            refreshing = {this.state.refreshing}
+            onRefresh = {this._handleRefresh}
+          />
+          {this.state.platform!='ios'?<CustomActionButton navigate={navigate} />:null}
+          {this.state.isOpen?<View style={styles.overlay} />:null}
+        </View>
       </StyleProvider>
     )
   }

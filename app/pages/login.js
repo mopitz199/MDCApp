@@ -62,6 +62,14 @@ export default class Login extends Component {
 
   static navigationOptions = {
     header: null,
+    drawerLabel: 'Logout',
+    drawerIcon: () => (
+      <Icon
+        name={'sign-out'}
+        size={20}
+        color={'#be5e64'}
+      />
+    )
   };
 
   _logout = () => {
