@@ -31,6 +31,7 @@ const Menu2 = DrawerNavigator(
   },
   {
     initialRouteName: 'profile',
-    drawerPosition: 'left'
+    drawerPosition: 'left',
+    drawerBackgroundColor: '#323232'
   }
 );

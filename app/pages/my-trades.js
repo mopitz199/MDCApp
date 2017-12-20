@@ -51,12 +51,6 @@ import Menu from '../components/menu';
 
 import HomeLeftHeader from '../components/home-left-header';
 
-class Null extends Component {
-  render(){
-    return null
-  }
-}
-
 export default class MyTrades extends Component {
 
   constructor(props){
@@ -94,9 +88,9 @@ export default class MyTrades extends Component {
   }
 
   componentDidMount(){
-    this.props.navigation.setParams({
+    /*this.props.navigation.setParams({
         _toggleMenu: this._toggleMenu
-    });
+    });*/
     this._loadTrades();
   }
 
@@ -107,7 +101,8 @@ export default class MyTrades extends Component {
       headerTintColor: 'white',
       title: 'My Trades',
       headerLeft: <HomeLeftHeader navigation={navigation} _toggleMenu={params._toggleMenu} />,
-      drawerLabel: <Null/>
+      drawerLabel: () => null,
+      drawerLockMode: 'locked-closed'
     };
   }
 
@@ -178,7 +173,6 @@ export default class MyTrades extends Component {
 
   render() {
     const { navigate } = this.props.navigation;
-    const menu = <Menu navigation={this.props.navigation} _toggleMenu={this._toggleMenu}/>;
     return(
       <StyleProvider style={getTheme()}>
         <View style={styles.container}>

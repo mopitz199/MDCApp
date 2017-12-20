@@ -9,7 +9,8 @@ import {
   AppRegistry,
   StyleSheet,
   TouchableHighlight,
-  ScrollView
+  ScrollView,
+  Text
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
@@ -38,22 +39,90 @@ import Menu2 from './components/menu2';
 
 import './utils/global';
 
-const SimpleApp = StackNavigator({
-  splash: { screen: Splash },
-  login: { screen: Login },
-  createTrade: { screen: CreateTrade },
-  photo: { screen: Photo },
-  otherTrades: { screen: OtherTrades },
-  profile: { screen: Profile },
-  recoverPassword: { screen: RecoverPassword },
-  insertRecoveryCode: { screen: InsertRecoveryCode },
-  changePassword: { screen: ChangePassword },
-  editTrade: { screen: EditTrade },
-  myTrades: { screen: MyTrades },
-  statistics: { screen: Statistics },
-  friends: { screen: OtherUsers },
-  filter: { screen: Filter },
-});
+class Hola extends Component {
+  render(){
+    return(
+      <Text>Hola</Text>
+    )
+  }
+}
+
+const MyTradesStack = StackNavigator(
+  {
+    myTrades: { screen: MyTrades },
+    filter: { screen: Filter },
+    photo: { screen: Photo },
+    createTrade: { screen: CreateTrade },
+    editTrade: { screen: EditTrade },
+  },
+  {
+    headerMode: 'screen',
+  }
+)
+
+
+const FriendsStack = StackNavigator(
+  {
+    friends: { screen: OtherUsers },
+    otherTrades: { screen: OtherTrades },
+  }
+)
+
+
+const LoginStack = StackNavigator(
+  {
+    login: { screen: Login },
+    recoverPassword: { screen: RecoverPassword },
+    insertRecoveryCode: { screen: InsertRecoveryCode },
+    changePassword: { screen: ChangePassword },
+  }
+)
+
+
+const DrawerStack = DrawerNavigator(
+  {
+    myTradesStack: { screen: MyTradesStack },
+    statistics: { screen: Statistics },
+    profile: { screen: Profile },
+    friendsStack: { screen: FriendsStack },
+    logoutStack: { screen: LoginStack },
+  },
+  {
+    initialRouteName: 'myTradesStack',
+    headerMode: 'screen',
+    drawerPosition: 'left',
+    drawerBackgroundColor: '#323232',
+    contentComponent: CustomDrawerContentComponent,
+    contentOptions:{
+      itemStyle:{
+        borderBottomWidth: 1,
+        borderBottomColor: 'red'
+      }
+    }
+  }
+);
+
+
+const DrawerNavigation = StackNavigator(
+  {
+    drawerStack: { screen: DrawerStack },
+  },
+  {
+    headerMode: 'none',
+  }
+)
+
+
+const SimpleApp = StackNavigator(
+  {
+    splash: { screen: Splash },
+    loginStack: { screen: LoginStack },
+    drawerNav: { screen: DrawerNavigation }
+  },
+  {
+    headerMode: 'none',
+  }
+);
 
 
 const CustomDrawerContentComponent = (props) => (
@@ -65,25 +134,7 @@ const CustomDrawerContentComponent = (props) => (
 );
 
 
-const DrawerStack = DrawerNavigator(
-  {
-    splash: {
-      screen: Splash,
-    },
-    mainStack: {
-      screen: SimpleApp,
-    },
-    statistics: { screen: Statistics },
-    profile: { screen: Profile },
-    friends: { screen: OtherUsers },
-    logout: {screen: Login},
-  },
-  {
-    initialRouteName: 'splash',
-    drawerPosition: 'left',
-    contentComponent: CustomDrawerContentComponent
-  }
-);
+
 
 
 class app extends Component {
@@ -93,7 +144,7 @@ class app extends Component {
   render() {
     return (
       <Root>
-        <DrawerStack onNavigationStateChange={this._onNavigationStateChange}/>
+        <SimpleApp onNavigationStateChange={this._onNavigationStateChange}/>
       </Root>
     )
   }

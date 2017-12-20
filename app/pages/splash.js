@@ -30,22 +30,15 @@ import getTheme from '../../native-base-theme/components';
 import * as theme from '../styles/theme';
 
 
-const resetActionMyTrades = NavigationActions.reset({
+const resetActionDrawerNav = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'myTrades'})]
+  actions: [NavigationActions.navigate({ routeName: 'drawerNav'})]
 });
 
 const resetActionLogin = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'login'})]
+  actions: [NavigationActions.navigate({ routeName: 'loginStack'})]
 });
-
-
-class Null extends Component {
-  render(){
-    return null
-  }
-}
 
 
 export default class Splash extends Component {
@@ -59,8 +52,7 @@ export default class Splash extends Component {
   }
 
   static navigationOptions = {
-    header: null,
-    drawerLabel: <Null/>
+    header: null
   };
 
 
@@ -75,7 +67,7 @@ export default class Splash extends Component {
     global.storage.load({
       key: 'token',
     }).then(ret => {
-      this.props.navigation.dispatch(resetActionMyTrades);
+      this.props.navigation.dispatch(resetActionDrawerNav);
     }).catch(err => {
       this.props.navigation.dispatch(resetActionLogin);
     });
