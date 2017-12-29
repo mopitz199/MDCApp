@@ -49,6 +49,8 @@ import { Pie } from 'react-native-pathjs-charts'
 
 import CustomCalendarIcon from '../components/custom-calendar-icon';
 
+import HomeLeftHeader from '../components/home-left-header';
+
 export default class Statistics extends Component {
 
   constructor(props){
@@ -78,11 +80,12 @@ export default class Statistics extends Component {
     headerTintColor: 'white',
     title: 'Statistics',
     drawerLabel: 'Statistics',
+    headerLeft: <HomeLeftHeader navigation={navigation} />,
     drawerIcon: () => (
       <Icon
         name={'pie-chart'}
         size={20}
-        color={'#2d9c16'}
+        color={'#ac2121'}
       />
     )
   });
@@ -110,7 +113,7 @@ export default class Statistics extends Component {
     })
     .catch((error) => {
       this.setState({visible: false});
-      utils.showAlert('Error', 'Al conectarse con el servicio');
+      utils.showAlert('Error', 'Connection error');
     });
   }
 
@@ -121,7 +124,7 @@ export default class Statistics extends Component {
   _renderEmptyChart(){
     return (
       <View style={styles.emptyChart}>
-        <Text style={styles.emptyText}>No existen datos para comparar</Text>
+        <Text style={styles.emptyText}>There's no data to show</Text>
         <Icon
           name="frown-o"
           size={100}
@@ -136,7 +139,7 @@ export default class Statistics extends Component {
           onPress={this._onPressButton}
           background={TouchableNativeFeedback.Ripple('#616161')}>
           <View style={styles.loadButton}>
-            <Text style={styles.loadTextButton}>CARGAR</Text>
+            <Text style={styles.loadTextButton}>LOAD</Text>
           </View>
       </TouchableNativeFeedback>
     )
@@ -148,7 +151,7 @@ export default class Statistics extends Component {
         onPress={this._onPressButton}
         >
         <View style={styles.loadButton}>
-          <Text style={styles.loadTextButton}>CARGAR</Text>
+          <Text style={styles.loadTextButton}>LOAD</Text>
         </View>
       </TouchableHighlight>
     )

@@ -37,10 +37,10 @@ import * as http from '../utils/http';
 // Import the custom theme
 import * as theme from '../styles/theme';
 
-
-const resetActionMyTrades = NavigationActions.reset({
+const actionToMyTradesStack = NavigationActions.reset({
   index: 0,
-  actions: [NavigationActions.navigate({ routeName: 'myTrades'})]
+  key: null,
+  actions: [NavigationActions.navigate({ routeName: 'drawerNav' })],
 });
 
 export default class Login extends Component {
@@ -60,16 +60,22 @@ export default class Login extends Component {
     };
   }
 
+  componentWillMount(){
+    this._logout();
+  }
+
   static navigationOptions = {
     header: null,
     drawerLabel: 'Logout',
-    drawerIcon: () => (
-      <Icon
-        name={'sign-out'}
-        size={20}
-        color={'#be5e64'}
-      />
-    )
+    drawerIcon: () => {
+      return(
+        <Icon
+          name={'sign-out'}
+          size={20}
+          color={'#be5e64'}
+        />
+      )
+    }
   };
 
   _logout = () => {
@@ -93,7 +99,7 @@ export default class Login extends Component {
     })
     .then(()=>{
       this.setState({visible: false});
-      this.props.navigation.dispatch(resetActionMyTrades);
+      this.props.navigation.dispatch(actionToMyTradesStack);
     })
     .catch((error) => {
       this.setState({visible: false});
@@ -127,7 +133,6 @@ export default class Login extends Component {
           this._getCurrentUser();
         });
       }else{
-        this._logout();
         this.setState({visible: false});
         utils.showAlert("Error", "Wrong credentials");
       }

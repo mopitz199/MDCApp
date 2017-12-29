@@ -19,7 +19,7 @@ import * as theme from './styles/theme';
 
 import { Root } from "native-base";
 
-import { StackNavigator,  TabNavigator, DrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
+import { StackNavigator,  TabNavigator, DrawerNavigator, DrawerItems, SafeAreaView, NavigationActions } from 'react-navigation';
 import Login from './pages/login';
 import Splash from './pages/splash';
 import CreateTrade from './pages/create-trade';
@@ -39,14 +39,6 @@ import Menu2 from './components/menu2';
 
 import './utils/global';
 
-class Hola extends Component {
-  render(){
-    return(
-      <Text>Hola</Text>
-    )
-  }
-}
-
 const MyTradesStack = StackNavigator(
   {
     myTrades: { screen: MyTrades },
@@ -56,10 +48,21 @@ const MyTradesStack = StackNavigator(
     editTrade: { screen: EditTrade },
   },
   {
-    headerMode: 'screen',
+    headerMode: 'screen'
   }
 )
 
+const StatisticsStack = StackNavigator(
+  {
+    statistics: { screen: Statistics },
+  }
+)
+
+const ProfileStack = StackNavigator(
+  {
+    profile: { screen: Profile },
+  }
+)
 
 const FriendsStack = StackNavigator(
   {
@@ -74,31 +77,64 @@ const LoginStack = StackNavigator(
     login: { screen: Login },
     recoverPassword: { screen: RecoverPassword },
     insertRecoveryCode: { screen: InsertRecoveryCode },
-    changePassword: { screen: ChangePassword },
+    changePassword: { screen: ChangePassword }
   }
 )
 
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+});
+
+const actionToLogoutStack = NavigationActions.reset({
+  index: 0,
+  key: null,
+  actions: [NavigationActions.navigate({ routeName: 'loginStack' })],
+});
+
+const CustomDrawerContentComponent = (props) => (
+  <ScrollView>
+    <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
+      <DrawerItems
+        {...props}
+        onItemPress={({ route, focused }) => {
+          if(!focused) {
+            setTimeout(() => {
+              if(route.routeName=='loginStack'){
+                console.warn("Max")
+                props.navigation.dispatch(actionToLogoutStack);
+              }else{
+                props.navigation.navigate(route.routeName)
+              }
+            }, 0)
+          }
+          props.navigation.navigate('DrawerClose');
+        }}
+      />
+    </SafeAreaView>
+  </ScrollView>
+);
+
 const DrawerStack = DrawerNavigator(
   {
     myTradesStack: { screen: MyTradesStack },
-    statistics: { screen: Statistics },
-    profile: { screen: Profile },
+    statistics: { screen: StatisticsStack },
+    profile: { screen: ProfileStack },
     friendsStack: { screen: FriendsStack },
-    logoutStack: { screen: LoginStack },
+    loginStack: { screen: LoginStack },
   },
   {
     initialRouteName: 'myTradesStack',
-    headerMode: 'screen',
     drawerPosition: 'left',
-    drawerBackgroundColor: '#323232',
     contentComponent: CustomDrawerContentComponent,
     contentOptions:{
       itemStyle:{
         borderBottomWidth: 1,
-        borderBottomColor: 'red'
+        borderBottomColor: '#c6c6c6'
       }
-    }
+    },
   }
 );
 
@@ -108,7 +144,7 @@ const DrawerNavigation = StackNavigator(
     drawerStack: { screen: DrawerStack },
   },
   {
-    headerMode: 'none',
+    headerMode: 'none'
   }
 )
 
@@ -120,21 +156,9 @@ const SimpleApp = StackNavigator(
     drawerNav: { screen: DrawerNavigation }
   },
   {
-    headerMode: 'none',
+    headerMode: 'none'
   }
 );
-
-
-const CustomDrawerContentComponent = (props) => (
-  <ScrollView>
-    <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
-      <DrawerItems {...props} />
-    </SafeAreaView>
-  </ScrollView>
-);
-
-
-
 
 
 class app extends Component {

@@ -39,6 +39,8 @@ import * as theme from '../styles/theme';
 // Validations
 import {validate} from '../utils/validation';
 
+import HomeLeftHeader from '../components/home-left-header';
+
 export default class Profile extends Component {
 
   constructor(props){
@@ -66,6 +68,7 @@ export default class Profile extends Component {
     headerTintColor: 'white',
     title: 'Profile',
     drawerLabel: 'Profile',
+    headerLeft: <HomeLeftHeader navigation={navigation} />,
     drawerIcon: () => (
       <Icon
         name={'user'}

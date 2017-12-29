@@ -37,6 +37,8 @@ import UserItemList from '../components/user-item-list';
 
 import CustomActionButton from '../components/action-button';
 
+import HomeLeftHeader from '../components/home-left-header';
+
 export default class OtherUsers extends Component {
 
   constructor(props){
@@ -59,6 +61,7 @@ export default class OtherUsers extends Component {
     headerTintColor: 'white',
     title: 'Friends',
     drawerLabel: 'Friends',
+    headerLeft: <HomeLeftHeader navigation={navigation} />,
     drawerIcon: () => (
       <Icon
         name={'users'}

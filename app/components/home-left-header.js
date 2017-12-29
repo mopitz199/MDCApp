@@ -42,7 +42,6 @@ export default class HomeLeftHeader extends Component {
 
   _showMenu = () => {
     this.props.navigation.navigate('DrawerToggle')
-    //this.props._toggleMenu();
   }
 
   render() {

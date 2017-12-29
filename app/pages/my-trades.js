@@ -88,9 +88,6 @@ export default class MyTrades extends Component {
   }
 
   componentDidMount(){
-    /*this.props.navigation.setParams({
-        _toggleMenu: this._toggleMenu
-    });*/
     this._loadTrades();
   }
 
@@ -100,18 +97,18 @@ export default class MyTrades extends Component {
       headerStyle:{ backgroundColor: theme.primaryNormalColor},
       headerTintColor: 'white',
       title: 'My Trades',
-      headerLeft: <HomeLeftHeader navigation={navigation} _toggleMenu={params._toggleMenu} />,
-      drawerLabel: () => null,
-      drawerLockMode: 'locked-closed'
+      headerLeft: <HomeLeftHeader navigation={navigation} />,
+      drawerLabel: () => 'My Trades',
+      drawerIcon: () => (
+        <Icon
+          name={'list-alt'}
+          size={20}
+          color={'#2d9c16'}
+        />
+      )
     };
   }
 
-
-  _toggleMenu = () => {
-    this.setState({
-      isOpen: !this.state.isOpen
-    });
-  }
 
   _updateMenuState(isOpen) {
     this.setState({ isOpen,  });
